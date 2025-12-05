@@ -1,0 +1,139 @@
+---
+layout: layouts/base.njk
+title: Submit Design
+description: Submit your authentic design style demonstration to be featured in our gallery
+---
+
+<div class="hero">
+  <div class="container">
+    <h1>Submit Your Design</h1>
+    <p class="hero-description">
+      Share your authentic recreation of a design style. All submissions are reviewed by instructors for historical accuracy before being added to the gallery.
+    </p>
+  </div>
+</div>
+
+<section class="container">
+  <div style="max-width: 700px; margin: 0 auto;">
+    <form id="submission-form" class="submission-form">
+      <div class="form-group">
+        <label for="name" class="form-label">Your Name *</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-input"
+          required
+          aria-required="true"
+        />
+        <div class="form-error" id="name-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-input"
+          required
+          aria-required="true"
+        />
+        <div class="form-error" id="email-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="style-name" class="form-label">Design Style *</label>
+        <input
+          type="text"
+          id="style-name"
+          name="style-name"
+          class="form-input"
+          placeholder="e.g., Swiss International Style, Bauhaus, Brutalism"
+          required
+          aria-required="true"
+        />
+        <p style="font-size: 0.875rem; color: var(--color-gray-700); margin-top: var(--spacing-xs);">
+          Enter the name of the design style you're demonstrating
+        </p>
+        <div class="form-error" id="style-name-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="demo-url" class="form-label">Demo URL *</label>
+        <input
+          type="url"
+          id="demo-url"
+          name="demo-url"
+          class="form-input"
+          placeholder="https://yourusername.github.io/your-demo"
+          required
+          aria-required="true"
+        />
+        <p style="font-size: 0.875rem; color: var(--color-gray-700); margin-top: var(--spacing-xs);">
+          Link to your live demo (GitHub Pages, Netlify, Vercel, etc.)
+        </p>
+        <div class="form-error" id="demo-url-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="screenshot-url" class="form-label">Screenshot URL</label>
+        <input
+          type="url"
+          id="screenshot-url"
+          name="screenshot-url"
+          class="form-input"
+          placeholder="https://example.com/screenshot.png"
+        />
+        <p style="font-size: 0.875rem; color: var(--color-gray-700); margin-top: var(--spacing-xs);">
+          Optional: Link to a screenshot of your demo
+        </p>
+        <div class="form-error" id="screenshot-url-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="explanation" class="form-label">Explanation of Authenticity *</label>
+        <textarea
+          id="explanation"
+          name="explanation"
+          class="form-textarea"
+          required
+          aria-required="true"
+          placeholder="Explain how your demo authentically represents the design style. Include details about typography, layout, color usage, and adherence to historical principles."
+        ></textarea>
+        <p style="font-size: 0.875rem; color: var(--color-gray-700); margin-top: var(--spacing-xs);">
+          100-500 words explaining your design decisions and authenticity
+        </p>
+        <div class="form-error" id="explanation-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="privacy-consent" required aria-required="true" />
+          I agree to the <a href="/privacy/">Privacy Policy</a> and understand my submission will be reviewed *
+        </label>
+        <div class="form-error" id="privacy-error" role="alert"></div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="button button-primary" id="submit-button">
+          Submit Design
+        </button>
+      </div>
+
+      <div id="form-message" role="status" aria-live="polite"></div>
+    </form>
+
+    <div id="success-message" class="hidden" style="text-align: center; padding: var(--spacing-3xl);">
+      <h2 style="color: var(--color-red);">✓ Submission Received!</h2>
+      <p>
+        Thank you for your submission. Your design will be reviewed by our instructors for authenticity and accuracy. You'll be notified via email once your submission has been reviewed.
+      </p>
+      <a href="/gallery/" class="button button-primary mt-xl">Back to Gallery</a>
+    </div>
+  </div>
+</section>
+
+{% block scripts %}
+<script src="/js/submit-form.js" type="module"></script>
+{% endblock %}

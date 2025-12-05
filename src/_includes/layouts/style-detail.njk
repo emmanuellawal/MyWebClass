@@ -1,0 +1,131 @@
+---
+layout: layouts/base.njk
+---
+
+<article>
+  <div class="hero">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-md">
+        <a href="/gallery/">← Back to Gallery</a>
+      </nav>
+      <h1>{{ style.title }}</h1>
+      <p class="hero-description">{{ style.description }}</p>
+
+      {% if style.demoUrl %}
+        <div class="mt-xl">
+          <a
+            href="{{ style.demoUrl }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-primary"
+            onclick="if(window.trackDemoClick) window.trackDemoClick('{{ style.demoUrl }}', '{{ style.title }}')"
+          >
+            View Live Demo →
+          </a>
+          {% if style.githubRepo %}
+            <a href="{{ style.githubRepo }}" target="_blank" rel="noopener noreferrer" class="button button-secondary">
+              View Source Code
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container">
+    {% if style.sampleImages and style.sampleImages.length > 0 %}
+      <section class="mb-3xl">
+        <img
+          src="{{ style.sampleImages[0].asset._ref | replace('image-', 'https://cdn.sanity.io/images/' + site.sanityProjectId + '/' + site.sanityDataset + '/') | replace('-jpg', '.jpg') | replace('-png', '.png') }}"
+          alt="{{ style.sampleImages[0].alt or style.title }}"
+          style="width: 100%; max-height: 600px; object-fit: cover; border: 2px solid var(--color-black);"
+        />
+        {% if style.sampleImages[0].caption %}
+          <p class="text-center mt-sm" style="color: var(--color-gray-700);">{{ style.sampleImages[0].caption }}</p>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    <div class="grid grid-2 mb-3xl">
+      <section>
+        {% if style.historicalBackground %}
+          <h2>Origins & Historical Background</h2>
+          <div class="content">
+            {% for block in style.historicalBackground %}
+              {% if block._type == 'block' %}
+                <p>{{ block.children[0].text }}</p>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </section>
+
+      <section>
+        {% if style.keyCharacteristics %}
+          <h2>Key Characteristics</h2>
+          <div class="content">
+            {% for block in style.keyCharacteristics %}
+              {% if block._type == 'block' %}
+                <p>{{ block.children[0].text }}</p>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </section>
+    </div>
+
+    {% if style.colorPalette and style.colorPalette.length > 0 %}
+      <section class="mb-3xl">
+        <h2>Color Palette</h2>
+        <div class="flex gap-md" style="flex-wrap: wrap;">
+          {% for color in style.colorPalette %}
+            <div style="text-align: center;">
+              <div style="width: 100px; height: 100px; background-color: {{ color.hex }}; border: 2px solid var(--color-black);"></div>
+              <p class="mt-sm" style="font-size: 0.875rem;">
+                <strong>{{ color.name }}</strong><br>
+                {{ color.hex }}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if style.typographyGuidance %}
+      <section class="mb-3xl">
+        <h2>Typography Guidance</h2>
+        <div class="content">
+          {% for block in style.typographyGuidance %}
+            {% if block._type == 'block' %}
+              <p>{{ block.children[0].text }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if style.principles and style.principles.length > 0 %}
+      <section class="mb-3xl">
+        <h2>Design Principles</h2>
+        <ul>
+          {% for principle in style.principles %}
+            <li>{{ principle }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if style.technologies and style.technologies.length > 0 %}
+      <section class="mb-3xl">
+        <h2>Technologies Used</h2>
+        <div class="flex gap-sm" style="flex-wrap: wrap;">
+          {% for tech in style.technologies %}
+            <span style="padding: var(--spacing-xs) var(--spacing-md); background-color: var(--color-gray-100); border: 1px solid var(--color-black); font-size: 0.875rem;">
+              {{ tech }}
+            </span>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  </div>
+</article>

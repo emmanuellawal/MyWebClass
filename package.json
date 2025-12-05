@@ -1,0 +1,48 @@
+{
+  "name": "mywebclass",
+  "version": "1.0.0",
+  "description": "A design education gallery showcasing Swiss Design lineage and authentic design style demos",
+  "main": ".eleventy.js",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy",
+    "format": "prettier --write .",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint '**/*.css'",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore _site",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:md",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [
+    "design",
+    "education",
+    "swiss-design",
+    "eleventy",
+    "sanity",
+    "gallery"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.5",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "markdownlint-cli": "^0.38.0",
+    "prettier": "^3.1.1",
+    "stylelint": "^16.1.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "dependencies": {
+    "@11ty/eleventy-img": "^3.1.8",
+    "@11ty/eleventy-plugin-bundle": "^2.0.2",
+    "@sanity/client": "^6.10.0",
+    "@sanity/image-url": "^1.0.2",
+    "@supabase/supabase-js": "^2.39.1",
+    "dotenv": "^16.3.1",
+    "groq": "^3.30.0",
+    "luxon": "^3.4.4"
+  }
+}
