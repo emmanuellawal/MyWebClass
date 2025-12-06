@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
 
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
 
   {% block head %}{% endblock %}
 </head>
@@ -26,6 +26,7 @@
 
   {% include "components/cookie-consent.njk" %}
 
+  <script src="/assets/js/menu.js"></script>
   <script src="/assets/js/consent.js"></script>
   {% block scripts %}{% endblock %}
 </body>

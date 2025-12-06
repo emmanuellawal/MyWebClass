@@ -4,20 +4,20 @@ layout: layouts/base.njk
 
 <article>
   <div class="hero">
-    <div class="container">
-      <nav aria-label="Breadcrumb" class="mb-md">
+    <div class="wrapper">
+      <nav aria-label="Breadcrumb" class="mb-md font-mono">
         <a href="/gallery/">← Back to Gallery</a>
       </nav>
-      <h1>{{ style.title }}</h1>
+      <h1><span class="highlight-brutal">{{ style.title }}</span></h1>
       <p class="hero-description">{{ style.description }}</p>
 
       {% if style.demoUrl %}
-        <div class="mt-xl">
+        <div class="mt-xl flex gap-md justify-center" style="flex-wrap: wrap;">
           <a
             href="{{ style.demoUrl }}"
             target="_blank"
             rel="noopener noreferrer"
-            class="button button-primary"
+            class="button button-brutal"
             onclick="if(window.trackDemoClick) window.trackDemoClick('{{ style.demoUrl }}', '{{ style.title }}')"
           >
             View Live Demo →
@@ -32,7 +32,7 @@ layout: layouts/base.njk
     </div>
   </div>
 
-  <div class="container">
+  <div class="wrapper">
     {% if style.sampleImages and style.sampleImages.length > 0 %}
       <section class="mb-3xl">
         <img
@@ -49,7 +49,7 @@ layout: layouts/base.njk
     <div class="grid grid-2 mb-3xl">
       <section>
         {% if style.historicalBackground %}
-          <h2>Origins & Historical Background</h2>
+          <h2 class="text-brutal">Origins & Historical Background</h2>
           <div class="content">
             {% for block in style.historicalBackground %}
               {% if block._type == 'block' %}
@@ -62,7 +62,7 @@ layout: layouts/base.njk
 
       <section>
         {% if style.keyCharacteristics %}
-          <h2>Key Characteristics</h2>
+          <h2 class="text-brutal">Key Characteristics</h2>
           <div class="content">
             {% for block in style.keyCharacteristics %}
               {% if block._type == 'block' %}
@@ -76,7 +76,7 @@ layout: layouts/base.njk
 
     {% if style.colorPalette and style.colorPalette.length > 0 %}
       <section class="mb-3xl">
-        <h2>Color Palette</h2>
+        <h2 class="text-brutal">Color Palette</h2>
         <div class="flex gap-md" style="flex-wrap: wrap;">
           {% for color in style.colorPalette %}
             <div style="text-align: center;">
@@ -93,7 +93,7 @@ layout: layouts/base.njk
 
     {% if style.typographyGuidance %}
       <section class="mb-3xl">
-        <h2>Typography Guidance</h2>
+        <h2 class="text-brutal">Typography Guidance</h2>
         <div class="content">
           {% for block in style.typographyGuidance %}
             {% if block._type == 'block' %}
@@ -106,7 +106,7 @@ layout: layouts/base.njk
 
     {% if style.principles and style.principles.length > 0 %}
       <section class="mb-3xl">
-        <h2>Design Principles</h2>
+        <h2 class="text-brutal">Design Principles</h2>
         <ul>
           {% for principle in style.principles %}
             <li>{{ principle }}</li>
@@ -117,7 +117,7 @@ layout: layouts/base.njk
 
     {% if style.technologies and style.technologies.length > 0 %}
       <section class="mb-3xl">
-        <h2>Technologies Used</h2>
+        <h2 class="text-brutal">Technologies Used</h2>
         <div class="flex gap-sm" style="flex-wrap: wrap;">
           {% for tech in style.technologies %}
             <span style="padding: var(--spacing-xs) var(--spacing-md); background-color: var(--color-gray-100); border: 1px solid var(--color-black); font-size: 0.875rem;">
