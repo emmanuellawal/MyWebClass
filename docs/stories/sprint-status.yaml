@@ -42,8 +42,8 @@ development_status:
   # EPIC 1: Foundation & Core Infrastructure
   # ============================================
   epic-1: in-progress
-  1-1-project-initialization-dependencies: ready-for-dev
-  1-2-tailwind-css-v4-neo-swiss-configuration: backlog
+  1-1-project-initialization-dependencies: done
+  1-2-tailwind-css-v4-neo-swiss-configuration: ready-for-dev
   1-3-sanity-cms-schema-deployment: backlog
   1-4-shared-sanity-client-data-fetching: backlog
   1-5-base-layout-neo-swiss-grid: backlog
