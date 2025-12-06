@@ -2,11 +2,12 @@ import 'dotenv/config';
 import { DateTime } from 'luxon';
 
 export default function(eleventyConfig) {
-  // Passthrough copy for assets
-  eleventyConfig.addPassthroughCopy("src/assets");
+  // Passthrough copy for assets (images, fonts - CSS handled by Tailwind build)
+  eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("src/assets/js");
 
-  // Watch for changes
-  eleventyConfig.addWatchTarget("src/assets/");
+  // Watch for CSS changes (triggers browser reload)
+  eleventyConfig.addWatchTarget("src/assets/css/");
 
   // Date filters
   eleventyConfig.addFilter("readableDate", (dateObj) => {

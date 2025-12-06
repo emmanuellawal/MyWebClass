@@ -5,8 +5,12 @@
   "main": "eleventy.config.js",
   "type": "module",
   "scripts": {
-    "dev": "eleventy --serve",
-    "build": "eleventy",
+    "dev": "npm-run-all -p dev:*",
+    "dev:11ty": "eleventy --serve",
+    "dev:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --watch",
+    "build": "npm-run-all build:css build:11ty",
+    "build:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --minify",
+    "build:11ty": "eleventy",
     "format": "prettier --write .",
     "lint:js": "eslint .",
     "lint:css": "stylelint '**/*.css'",
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
     "@playwright/test": "^1.40.1",
+    "@tailwindcss/cli": "^4.1.17",
     "@types/node": "^20.10.5",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
