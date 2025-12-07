@@ -40,8 +40,8 @@ development_status:
   # Epic 1: Foundation & Sanity CMS Integration
   # ============================================
   epic-1: in-progress
-  1-1-initialize-sanity-studio-project: review
-  1-2-create-sanity-content-schemas: backlog
+  1-1-initialize-sanity-studio-project: done
+  1-2-create-sanity-content-schemas: done
   1-3-set-up-eleventy-data-fetching-layer: backlog
   1-4-configure-github-actions-sanity-webhook-rebuild: backlog
   1-5-migrate-existing-content-to-sanity: backlog

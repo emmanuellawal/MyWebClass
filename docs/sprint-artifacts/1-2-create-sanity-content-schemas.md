@@ -1,6 +1,6 @@
 # Story 1.2: Create Sanity Content Schemas
 
-Status: Ready for Review
+Status: Done
 
 ## Story
 
