@@ -1,0 +1,125 @@
+---
+layout: layouts/base.njk
+title: Learn design history through real examples
+description: Explore authentic implementations of iconic design movements. From Swiss modernism to digital brutalism — see how principles become practice.
+permalink: /
+---
+
+{% import "macros/button.njk" as btn %}
+{% import "macros/card.njk" as cards %}
+
+{# Hero Section #}
+<section class="bg-black text-white">
+  <div class="container-custom py-16 md:py-20 lg:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+      <div class="lg:col-span-8">
+        <p class="text-neutral-400 text-overline mb-4">Design Education Platform</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+          Learn design history<br />
+          through <span class="text-swiss-red">real examples</span>.
+        </h1>
+        <p class="text-xl text-neutral-300 max-w-xl mb-8">
+          Explore authentic implementations of iconic design movements.
+          From Swiss modernism to digital brutalism — see how principles
+          become practice.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#gallery" class="btn btn-primary bg-white text-black hover:bg-neutral-200">
+            Explore Gallery
+          </a>
+          <a href="/submit/" class="btn btn-secondary border-white text-white hover:bg-white hover:text-black">
+            Submit Your Demo
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-4 flex items-center justify-center">
+        {# Swiss-style geometric decoration #}
+        <div class="relative w-48 h-48">
+          <div class="absolute top-0 left-0 w-24 h-24 bg-swiss-red"></div>
+          <div class="absolute bottom-0 right-0 w-24 h-24 border-2 border-white"></div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Stats Bar #}
+<section class="border-b-2 border-black">
+  <div class="container-custom grid grid-cols-2 lg:grid-cols-4">
+    {% set stats = [
+      { number: site.stats.designStyles, label: 'Design Styles' },
+      { number: site.stats.studentDemos, label: 'Student Demos' },
+      { number: site.stats.authentic, label: 'Authentic' },
+      { number: site.stats.cost, label: 'Education' }
+    ] %}
+    {% for stat in stats %}
+    <div class="p-8 border-r border-black {% if loop.index % 2 == 0 %}max-lg:border-r-0{% endif %} {% if loop.last %}lg:border-r-0{% endif %} text-center">
+      <span class="text-3xl md:text-4xl font-bold block">{{ stat.number }}</span>
+      <span class="text-sm text-neutral-500">{{ stat.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# Gallery Section #}
+<section id="gallery" class="section-padding">
+  <div class="container-custom">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+      <div>
+        <span class="text-overline text-neutral-400">Browse</span>
+        <h2 class="text-h2 mt-2">Design Style Gallery</h2>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="px-4 py-2 bg-black text-white text-sm">All Styles</button>
+        <button class="px-4 py-2 border border-black text-sm hover:bg-black hover:text-white transition-colors">Modernist</button>
+        <button class="px-4 py-2 border border-black text-sm hover:bg-black hover:text-white transition-colors">Contemporary</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for style in designStyles %}
+        {% if style.status == 'approved' %}
+        <a href="/styles/{{ style.slug }}/" class="block">
+          {{ cards.galleryCard(style) }}
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# How It Works Section #}
+<section id="how-it-works" class="bg-neutral-100 section-padding border-t-2 border-black">
+  <div class="container-custom">
+    <h2 class="text-h2 mb-12 text-center">How It Works</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {% set steps = [
+        { step: '01', title: 'Learn', desc: 'Study the history and principles of each design style' },
+        { step: '02', title: 'Build', desc: 'Create an authentic demo implementing those principles' },
+        { step: '03', title: 'Submit', desc: 'Share your demo with explanation of authenticity' },
+        { step: '04', title: 'Publish', desc: 'Get approved and featured in our gallery' }
+      ] %}
+      {% for item in steps %}
+      <div class="text-center">
+        <span class="text-5xl font-bold text-neutral-200 block mb-4">{{ item.step }}</span>
+        <h3 class="text-xl font-bold mb-2">{{ item.title }}</h3>
+        <p class="text-sm text-neutral-500">{{ item.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# CTA Section #}
+<section class="bg-black text-white section-padding">
+  <div class="container-custom text-center">
+    <h2 class="text-h2 mb-4">Ready to contribute?</h2>
+    <p class="text-neutral-400 mb-8 max-w-xl mx-auto">
+      Submit your own design style demo and become part of our educational archive.
+    </p>
+    <a href="/submit/" class="btn btn-primary bg-white text-black hover:bg-neutral-200 inline-block">
+      Submit Your Demo
+    </a>
+  </div>
+</section>

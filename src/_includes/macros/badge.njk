@@ -1,0 +1,16 @@
+{% macro statusBadge(status) %}
+  {% set badgeClass = "" %}
+  {% if status == "pending" %}
+    {% set badgeClass = "badge-pending" %}
+  {% elif status == "approved" %}
+    {% set badgeClass = "badge-approved" %}
+  {% elif status == "rejected" %}
+    {% set badgeClass = "badge-rejected" %}
+  {% elif status == "submitted" %}
+    {% set badgeClass = "badge-submitted" %}
+  {% endif %}
+
+  <span class="badge {{ badgeClass }}">
+    {{ status }}
+  </span>
+{% endmacro %}

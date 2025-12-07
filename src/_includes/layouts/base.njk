@@ -1,33 +1,44 @@
 <!DOCTYPE html>
-<html lang="{{ site.language }}">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if title %}{{ title }} | {% endif %}{{ site.name }}</title>
-  <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}">
+  <meta name="description" content="{{ description or 'Learn design history through authentic, fully-implemented website demos. From Swiss modernism to digital brutalism.' }}">
+  <meta name="keywords" content="design education, web design, design styles, Swiss design, Bauhaus, Brutalism">
 
-  <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ site.name }}{% endif %}">
-  <meta property="og:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:title" content="{{ title or 'MyWebClass.org' }}">
+  <meta property="og:description" content="{{ description or 'Learn design history through real examples' }}">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:url" content="{{ page.url }}">
 
-  <link rel="stylesheet" href="/assets/css/main.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title or 'MyWebClass.org' }}">
+  <meta name="twitter:description" content="{{ description or 'Learn design history through real examples' }}">
+
+  <title>{{ title or 'MyWebClass.org' }}{{ ' | MyWebClass.org' if title }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/main.css">
 
   {% block head %}{% endblock %}
 </head>
-<body>
-  {% include "components/header.njk" %}
+<body class="min-h-screen flex flex-col">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <main id="main-content">
-    {{ content | safe }}
+  {% include "components/navigation.njk" %}
+
+  <main id="main-content" class="flex-1">
+    {% block content %}{{ content | safe }}{% endblock %}
   </main>
 
   {% include "components/footer.njk" %}
+  {% include "components/cookie-banner.njk" %}
 
-  {% include "components/cookie-consent.njk" %}
-
-  <script src="/assets/js/menu.js"></script>
-  <script src="/assets/js/consent.js"></script>
+  <script src="/scripts/navigation.js" defer></script>
+  <script src="/scripts/cookie-consent.js" defer></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

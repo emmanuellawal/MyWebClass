@@ -1,0 +1,106 @@
+# generated: 2025-12-06
+# project: is373-final
+# project_key: is373-final
+# tracking_system: file-system
+# story_location: docs/sprint-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic exists in epic file but not contexted
+#   - contexted or in-progress
+#   - done: Epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder by *create-story
+#   - ready-for-dev: Draft approved and story context created by *story-ready
+#   - in-progress: Developer actively working on implementation by *dev-story
+#   - review: Implementation complete, ready for review by *code-review
+#   - done: Story completed by *story-done
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done by *retrospective
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics should be marked `in-progress` before stories can be marked beyond `backlog`
+# - SM typically drafts next story ONLY after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', dev reviews, then Dev moves to 'done'
+
+generated: 2025-12-06
+project: is373-final
+project_key: is373-final
+tracking_system: file-system
+story_location: docs/sprint-artifacts
+
+development_status:
+  # ============================================
+  # Epic 1: Foundation & Sanity CMS Integration
+  # ============================================
+  epic-1: in-progress
+  1-1-initialize-sanity-studio-project: review
+  1-2-create-sanity-content-schemas: backlog
+  1-3-set-up-eleventy-data-fetching-layer: backlog
+  1-4-configure-github-actions-sanity-webhook-rebuild: backlog
+  1-5-migrate-existing-content-to-sanity: backlog
+  epic-1-retrospective: optional
+
+  # ============================================
+  # Epic 2: Public Design Gallery Experience
+  # ============================================
+  epic-2: backlog
+  2-1-gallery-listing-page-with-design-style-cards: backlog
+  2-2-design-style-detail-pages-with-educational-content: backlog
+  2-3-gallery-filtering-by-design-style-category: backlog
+  2-4-featured-themes-section: backlog
+  2-5-approved-submissions-in-gallery: backlog
+  2-6-responsive-mobile-experience: backlog
+  2-7-educational-articles-display: backlog
+  epic-2-retrospective: optional
+
+  # ============================================
+  # Epic 3: Privacy, Legal & Accessibility
+  # ============================================
+  epic-3: backlog
+  3-1-cookie-consent-banner: backlog
+  3-2-cookie-preferences-management: backlog
+  3-3-google-analytics-4-with-consent-gating: backlog
+  3-4-legal-pages: backlog
+  3-5-data-deletion-request-process: backlog
+  3-6-semantic-html-screen-reader-support: backlog
+  3-7-skip-links-keyboard-navigation: backlog
+  3-8-aria-labels-interactive-element-accessibility: backlog
+  3-9-color-contrast-visual-accessibility: backlog
+  epic-3-retrospective: optional
+
+  # ============================================
+  # Epic 4: Student Submission Pipeline
+  # ============================================
+  epic-4: backlog
+  4-1-submission-form-page: backlog
+  4-2-consent-checkboxes: backlog
+  4-3-screenshot-upload-with-preview: backlog
+  4-4-form-submission-to-make-webhook: backlog
+  4-5-make-scenario-create-sanity-document: backlog
+  4-6-discord-webhook-new-submission-notification: backlog
+  4-7-airtable-crm-sync: backlog
+  4-8-email-validation-edu-encouragement: backlog
+  epic-4-retrospective: optional
+
+  # ============================================
+  # Epic 5: Instructor Review & Curation
+  # ============================================
+  epic-5: backlog
+  5-1-instructor-authentication-via-sanity-studio: backlog
+  5-2-view-pending-submissions-queue: backlog
+  5-3-view-submission-details: backlog
+  5-4-approve-submission: backlog
+  5-5-reject-submission-with-feedback: backlog
+  5-6-filter-submissions-by-status: backlog
+  5-7-mark-submission-as-featured: backlog
+  5-8-manage-featured-themes-order: backlog
+  5-9-discord-notification-on-approval: backlog
+  5-10-admin-page-with-sanity-studio-link: backlog
+  epic-5-retrospective: optional

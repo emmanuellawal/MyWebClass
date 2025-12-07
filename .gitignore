@@ -1,12 +1,13 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Build outputs
 _site/
-studio/dist/
-studio/.sanity/
+dist/
+public/
+.cache/
 
-# Environment
+# Environment variables
 .env
 .env.local
 .env.*.local
@@ -15,15 +16,20 @@ studio/.sanity/
 .idea/
 .vscode/
 *.swp
+*.swo
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
+
+# Vite
+.vite/
+
+# Sanity Studio
+studio/dist/
+studio/node_modules/
+studio/.sanity/
 
 # Logs
 *.log
 npm-debug.log*
-
-# Test results
-playwright-report/
-test-results/

@@ -1,5 +1,3 @@
-import designStyle from './designStyle'
-import article from './article'
-import author from './author'
-
-export const schemaTypes = [designStyle, article, author]
+// Schema types will be added in Story 1.2
+// Export empty array for clean project initialization
+export const schemaTypes = []

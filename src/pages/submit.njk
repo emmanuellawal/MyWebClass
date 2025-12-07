@@ -1,0 +1,121 @@
+---
+layout: layouts/base.njk
+title: Submit Your Demo
+description: Share your design style implementation with the community. All submissions are reviewed by instructors before publishing.
+permalink: /submit/
+---
+
+{% import "macros/form-field.njk" as field %}
+
+<div class="max-w-container-md mx-auto px-6 section-padding">
+  <div class="text-center mb-12">
+    <h1 class="text-h1 mb-4">Submit Your Demo</h1>
+    <p class="text-neutral-500">
+      Share your design style implementation with the community.
+      All submissions are reviewed by instructors before publishing.
+    </p>
+  </div>
+
+  {# Success Message (hidden by default) #}
+  <div id="success-message" class="hidden bg-green-50 border-l-4 border-green-500 p-8 text-center mb-8">
+    <span class="text-4xl block mb-4">✓</span>
+    <h2 class="text-2xl font-bold text-green-700 mb-2">Submission Received!</h2>
+    <p class="text-green-600 mb-6">
+      Your demo has been submitted for review. You'll receive an email
+      when it's approved.
+    </p>
+    <a href="/" class="btn btn-primary bg-green-600 hover:bg-green-700 inline-block">
+      Back to Gallery
+    </a>
+  </div>
+
+  {# Submission Form #}
+  <form
+    id="submission-form"
+    class="space-y-6"
+    method="POST"
+    netlify
+    netlify-honeypot="bot-field"
+    name="demo-submission"
+  >
+    {# Honeypot for spam prevention #}
+    <p class="hidden">
+      <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {{ field.input('name', 'Full Name', 'text', 'Your name', true) }}
+      {{ field.input('email', 'Email', 'email', 'you@email.com', true) }}
+    </div>
+
+    {{ field.select('style', 'Design Style', [
+      { value: 'swiss', label: 'Swiss International Style' },
+      { value: 'bauhaus', label: 'Bauhaus' },
+      { value: 'brutalist', label: 'Brutalism' },
+      { value: 'flat', label: 'Flat Design' },
+      { value: 'minimalist', label: 'Minimalism' },
+      { value: 'other', label: 'Other (specify in description)' }
+    ], true) }}
+
+    {{ field.input('demoUrl', 'Demo URL', 'url', 'https://yourusername.github.io/demo', true, 'Must be a publicly accessible URL (GitHub Pages, Netlify, etc.)') }}
+
+    {# Screenshot Upload #}
+    <div class="form-group">
+      <label for="screenshot" class="form-label">
+        Screenshot <span class="text-swiss-red">*</span>
+      </label>
+      <div class="border-2 border-dashed border-black p-8 text-center cursor-pointer hover:bg-neutral-50 transition-colors">
+        <input
+          type="file"
+          id="screenshot"
+          name="screenshot"
+          accept="image/png,image/jpeg"
+          required
+          class="hidden"
+        />
+        <label for="screenshot" class="cursor-pointer">
+          <span class="text-4xl block mb-2">📷</span>
+          <p class="text-sm text-neutral-500">Click to upload or drag and drop</p>
+          <p class="text-caption text-neutral-400 mt-1">PNG, JPG up to 5MB</p>
+        </label>
+        <p id="file-name" class="text-sm text-neutral-600 mt-2 hidden"></p>
+      </div>
+    </div>
+
+    {{ field.textarea('authenticity', 'Authenticity Explanation', 5, 'Explain how your demo authentically represents the design style. Reference specific typography, color, layout, and compositional choices...', true) }}
+
+    {{ field.checkbox('consent', 'I confirm this is my original work and I consent to having it published on MyWebClass.org if approved. I agree to the <a href="/legal/terms/" class="underline">Terms of Service</a> and <a href="/legal/privacy/" class="underline">Privacy Policy</a>.', true) }}
+
+    <button
+      type="submit"
+      class="btn btn-primary w-full"
+    >
+      Submit for Review
+    </button>
+  </form>
+</div>
+
+<script>
+  // File upload preview
+  const fileInput = document.getElementById('screenshot');
+  const fileName = document.getElementById('file-name');
+
+  fileInput.addEventListener('change', function(e) {
+    if (this.files && this.files[0]) {
+      fileName.textContent = 'Selected: ' + this.files[0].name;
+      fileName.classList.remove('hidden');
+    }
+  });
+
+  // Form submission handler
+  const form = document.getElementById('submission-form');
+  const successMessage = document.getElementById('success-message');
+
+  form.addEventListener('submit', function(e) {
+    // Netlify will handle the actual submission
+    setTimeout(function() {
+      form.classList.add('hidden');
+      successMessage.classList.remove('hidden');
+    }, 100);
+  });
+</script>

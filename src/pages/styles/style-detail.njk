@@ -1,0 +1,120 @@
+---
+pagination:
+  data: designStyles
+  size: 1
+  alias: style
+permalink: "/styles/{{ style.slug }}/"
+layout: layouts/base.njk
+---
+
+{% set title = style.title %}
+{% set description = style.description %}
+
+{# Header #}
+<section class="border-b-2 border-black">
+  <div class="container-custom py-8">
+    <a href="/" class="text-sm text-neutral-500 hover:text-black mb-4 block inline-flex items-center gap-2">
+      ← Back to Gallery
+    </a>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+      <div>
+        <span class="text-overline text-neutral-400">{{ style.era }}</span>
+        <h1 class="text-h1 mt-2">{{ style.title }}</h1>
+      </div>
+      <div
+        class="w-16 h-16 flex-shrink-0"
+        style="background-color: {{ style.accentColor }};"
+      ></div>
+    </div>
+  </div>
+</section>
+
+{# Demo Preview #}
+<section class="border-b-2 border-black">
+  <div class="container-custom py-12">
+    <h2 class="text-overline text-neutral-400 mb-6">Live Demo</h2>
+    <div
+      class="h-96 border-2 border-black flex items-center justify-center"
+      style="background-color: {{ style.accentColor }}10;"
+    >
+      <div class="text-center">
+        <span class="text-8xl block mb-4">{{ style.thumbnail }}</span>
+        <p class="text-neutral-500 mb-4">Interactive {{ style.title }} Demo</p>
+        <a href="{{ style.demoUrl }}" target="_blank" rel="noopener" class="btn btn-primary text-sm">
+          Open Full Demo ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Educational Content #}
+<section class="section-padding">
+  <div class="container-custom">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      {# Main Content #}
+      <div class="lg:col-span-8">
+        <h2 class="text-h2 mb-6">Origins & History</h2>
+        <p class="text-lg text-neutral-600 leading-relaxed mb-8">
+          {{ style.origin }}
+        </p>
+
+        <h2 class="text-h2 mb-6">Key Characteristics</h2>
+        <ul class="space-y-3 mb-8">
+          {% for char in style.characteristics %}
+          <li class="flex items-start gap-3">
+            <div
+              class="w-2 h-2 mt-2 flex-shrink-0"
+              style="background-color: {{ style.accentColor }};"
+            ></div>
+            <span class="text-neutral-600">{{ char }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <h2 class="text-h2 mb-6">Why This Demo Is Authentic</h2>
+        <p class="text-neutral-600 leading-relaxed">
+          This implementation faithfully recreates the {{ style.title }} through
+          careful attention to typography, grid systems, color usage, and compositional
+          principles documented in the original movement. Every design decision
+          is grounded in historical research.
+        </p>
+      </div>
+
+      {# Sidebar #}
+      <div class="lg:col-span-4">
+        <div class="bg-neutral-100 p-6 sticky top-24">
+          <h3 class="font-bold mb-4">Style Guide</h3>
+
+          <div class="mb-6">
+            <span class="text-caption text-neutral-400 uppercase tracking-wider">Color Palette</span>
+            <div class="flex gap-2 mt-2 flex-wrap">
+              {% for color in style.colorPalette %}
+              <div
+                class="w-8 h-8 {% if color == '#FFFFFF' %}border border-black{% endif %}"
+                style="background-color: {{ color }};"
+                title="{{ color }}"
+              ></div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <span class="text-caption text-neutral-400 uppercase tracking-wider">Typography</span>
+            <p class="mt-2 font-bold">{{ style.typography }}</p>
+            <p class="text-sm text-neutral-500">Sans-serif, clean</p>
+          </div>
+
+          <div class="mb-6">
+            <span class="text-caption text-neutral-400 uppercase tracking-wider">Grid</span>
+            <p class="mt-2 text-sm text-neutral-600">{{ style.gridSystem }}</p>
+          </div>
+
+          <a href="#" class="btn btn-primary w-full text-sm text-center block">
+            Download Style Guide
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

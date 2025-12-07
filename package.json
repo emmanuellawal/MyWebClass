@@ -1,55 +1,40 @@
 {
   "name": "mywebclass",
   "version": "1.0.0",
-  "description": "A design education gallery showcasing Swiss Design lineage and authentic design style demos",
-  "main": "eleventy.config.js",
-  "type": "module",
+  "description": "MyWebClass.org - Design Styles Gallery built with Eleventy and Sanity CMS",
+  "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all -p dev:*",
-    "dev:11ty": "eleventy --serve",
-    "dev:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --watch",
-    "build": "npm-run-all build:css build:11ty",
-    "build:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --minify",
-    "build:11ty": "eleventy",
-    "format": "prettier --write .",
-    "lint:js": "eslint .",
-    "lint:css": "stylelint '**/*.css'",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore _site",
-    "lint": "npm run lint:js && npm run lint:css && npm run lint:md",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui"
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:eleventy": "eleventy --serve",
+    "dev:css": "npx tailwindcss -i src/styles/main.css -o public/styles/main.css --watch",
+    "build": "npm-run-all build:css build:eleventy",
+    "build:css": "NODE_ENV=production npx tailwindcss -i src/styles/main.css -o public/styles/main.css --minify",
+    "build:eleventy": "eleventy",
+    "start": "eleventy --serve",
+    "studio:dev": "cd studio && npm run dev",
+    "studio:build": "cd studio && npm run build",
+    "studio:deploy": "cd studio && npm run deploy"
   },
   "keywords": [
-    "design",
-    "education",
-    "swiss-design",
     "eleventy",
     "sanity",
-    "gallery"
+    "design",
+    "education"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
-    "@playwright/test": "^1.40.1",
-    "@tailwindcss/cli": "^4.1.17",
-    "@types/node": "^20.10.5",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "markdownlint-cli": "^0.38.0",
+    "@11ty/eleventy-img": "^6.0.4",
+    "@types/node": "^24.10.1",
+    "autoprefixer": "^10.4.22",
+    "cssnano": "^7.1.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.1.1",
-    "stylelint": "^16.1.0",
-    "stylelint-config-standard": "^36.0.0",
-    "tailwindcss": "^4.1.17"
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@11ty/eleventy-img": "^3.1.8",
-    "@11ty/eleventy-plugin-bundle": "^2.0.2",
-    "@sanity/client": "^6.10.0",
-    "@sanity/image-url": "^1.0.2",
-    "dotenv": "^16.3.1",
-    "luxon": "^3.4.4",
-    "nunjucks": "^3.2.4"
+    "@sanity/client": "^7.13.1"
   }
 }

@@ -1,12 +1,13 @@
-export default {
-  name: "MyWebClass.org",
-  description: "A digital museum of design styles",
-  url: process.env.SITE_URL || "https://mywebclass.org",
-  language: "en",
-  author: {
-    name: "MyWebClass Team",
-    email: "hello@mywebclass.org"
-  },
-  sanityProjectId: process.env.SANITY_PROJECT_ID || 'your_sanity_project_id',
-  sanityDataset: process.env.SANITY_DATASET || 'production'
+module.exports = {
+  title: 'MyWebClass.org',
+  description: 'Learn design history through authentic, fully-implemented website demos. From Swiss modernism to digital brutalism.',
+  url: 'https://mywebclass.org',
+  author: 'NJIT S373 Project Team',
+  year: new Date().getFullYear(),
+  stats: {
+    designStyles: '12+',
+    studentDemos: '50+',
+    authentic: '100%',
+    cost: 'Free'
+  }
 };

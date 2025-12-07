@@ -2,13 +2,16 @@
 stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8]
 inputDocuments:
   - docs/prd.md
+  - docs/index.md
+  - docs/project-overview.md
+  - docs/swiss-lineage.md
 workflowType: 'architecture'
 lastStep: 8
 status: 'complete'
-completedAt: '2025-12-05'
-project_name: 'MyWebClass'
+project_name: 'is373-final'
 user_name: 'Jay'
-date: '2025-12-05'
+date: '2025-12-06'
+completedAt: '2025-12-06'
 ---
 
 # Architecture Decision Document
@@ -20,634 +23,583 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 ### Requirements Overview
 
 **Functional Requirements:**
-41 functional requirements spanning 7 categories. The core value proposition is a gallery of authentic design style implementations with educational content, supported by a student submission workflow with instructor moderation.
-
-Key functional areas:
-- **Content consumption** (FR1-FR8): Gallery browsing, detail pages, external demo links
-- **Submission pipeline** (FR9-FR16): Form capture → Sanity storage → instructor review → public display
-- **Content management** (FR17-FR28): Sanity Studio for both submission review and content authoring
-- **Integrations** (FR29-FR32): Discord notifications, CRM sync, analytics
-- **Compliance** (FR33-FR37): GDPR consent, privacy policy
+50 functional requirements across 7 domains:
+- Design Gallery (7 FRs): Public browsing, filtering, detail pages, featured themes, mobile-responsive
+- Submission Management (9 FRs): Form submission, CMS storage, consent, status workflow
+- Instructor Dashboard (8 FRs): Handled via Sanity Studio for MVP (custom UI post-MVP)
+- Content Curation (4 FRs): Featured theme selection via Sanity fields
+- User Consent & Privacy (7 FRs): Cookie consent, analytics gating, legal pages, data deletion
+- Integrations (5 FRs): Discord webhooks, CRM sync, GA4 analytics, Sanity rebuild triggers
+- CMS & Accessibility (10 FRs): Sanity content management, semantic HTML, ARIA, focus management
 
 **Non-Functional Requirements:**
-- Performance: Lighthouse 90+, FCP <1.5s, LCP <2.5s, CLS <0.1, CSS <50KB
-- Security: HTTPS-only submissions, Sanity auth, consent-gated third-party scripts
-- Accessibility: WCAG AA compliance
-- Build: CI pipeline <10min, automated deployment on main merge
-- Reliability: Graceful degradation for all integrations
+38 NFRs defining quality attributes:
+- Performance (8 NFRs): Lighthouse >90, FCP <1.5s, LCP <2.5s, CLS <0.1, CSS <50KB
+- Security (7 NFRs): HTTPS, CSRF, XSS, Sanity-managed auth for MVP, secrets management
+- Accessibility (8 NFRs): WCAG 2.1 AA, contrast ratios, keyboard navigation, screen reader support
+- Reliability (5 NFRs): 99.9% uptime, graceful degradation, failure isolation
+- Integration (5 NFRs): Webhook timing, GDPR compliance, batch sync support
+- Maintainability (5 NFRs): Code style, documentation, CI clarity
 
 **Scale & Complexity:**
 
-- Primary domain: Static web application with headless CMS
-- Complexity level: Medium
-- Estimated architectural components: 8-10 (pages, layouts, components, Sanity schemas, client-side scripts, CI pipeline, integrations)
+- Primary domain: Static Web Application with Headless CMS
+- Complexity level: Medium (reduced by leveraging Sanity Studio)
+- Estimated architectural components: 12-15
 
 ### Technical Constraints & Dependencies
 
-**Pre-determined technology stack:**
-- Eleventy (11ty) for static site generation
-- Sanity CMS for content and submissions
-- GitHub Pages for hosting
-- GitHub Actions for CI/CD
-- Playwright for E2E testing
+**Existing Technology Stack (Brownfield):**
+- Eleventy 3.1.2 static site generator
+- Tailwind CSS 3.4.18 with Swiss design tokens
+- Nunjucks templating
+- PostCSS processing pipeline
 
-**External dependencies:**
-- Sanity API (build-time GROQ queries + runtime mutations for form)
-- Discord webhook API
-- CRM API (via Zapier/Make)
-- Google Analytics 4
+**Target Integrations:**
+- Sanity CMS for content management AND instructor workflow (MVP)
+- GitHub Pages for static hosting
+- Discord for community notifications
+- HubSpot/Airtable/Notion for CRM
+- Google Analytics 4 with consent mode
+
+**Compliance Requirements:**
+- GDPR cookie consent with opt-in analytics
+- WCAG 2.1 Level AA accessibility
+- Data retention and deletion capabilities
 
 ### Cross-Cutting Concerns Identified
 
-1. **GDPR Compliance:** Affects analytics loading, form submission consent, privacy documentation
-2. **Accessibility (WCAG AA):** Impacts all UI components, navigation, forms, content structure
-3. **Performance Budget:** Constrains CSS architecture, image handling, JavaScript footprint
-4. **Build Pipeline:** Linting, testing, Lighthouse checks gate all deployments
-5. **Graceful Degradation:** All integrations must fail silently without blocking core functionality
+1. **Consent Management**: Cookie consent state must gate analytics loading; form consent separate from marketing
+2. **Error Handling**: Integration failures (Discord, CRM) must not block core user flows
+3. **Performance Budget**: Static-first architecture with aggressive optimization targets
+4. **Accessibility**: Built into every component from the start
+5. **Build Pipeline**: Sanity webhook → GitHub Actions → Eleventy → GitHub Pages
+
+### MVP Scope Decisions
+
+| Concern | MVP Approach | Post-MVP |
+|---------|--------------|----------|
+| Instructor Auth | Sanity Studio native auth | Custom dashboard with role-based access |
+| Submission Review | Sanity Studio interface | Custom admin UI |
+| Featured Selection | Sanity `featured` boolean field | Curator dashboard |
 
 ## Starter Template Evaluation
 
 ### Primary Technology Domain
 
-Static web application with headless CMS (Eleventy v3.1.2 + Sanity CMS), based on PRD-specified stack.
+Static Web Application with Headless CMS — Brownfield project extending existing Eleventy codebase.
 
-### Starter Options Considered
+### Starter Selection: Existing Brownfield Codebase
 
-| Option | Description | Fit |
-|--------|-------------|-----|
-| Sanity + 11ty Blog Starter | Official monorepo with pre-configured Sanity | Poor (blog-centric) |
-| ixartz/Eleventy-Starter-Boilerplate | Production-ready with Tailwind, ESLint, Netlify CMS | Moderate (wrong CMS) |
-| Fresh Eleventy + Manual Sanity | Clean slate with purpose-built integration | Best |
+**Rationale:** Working Eleventy 3.1.2 + Tailwind 3.4.18 stack already established. Swiss design system implemented. Only missing piece is Sanity CMS integration.
 
-### Selected Approach: Fresh Eleventy + Manual Sanity Integration
+### Architectural Decisions Pre-Established
 
-**Rationale:**
-- Gallery/submission model doesn't fit blog starter schemas
-- Sanity integration is simple (client + `_data` files with GROQ)
-- No cruft to delete—every dependency serves the requirements
-- Full control over project structure and patterns
+| Decision | Implementation |
+|----------|----------------|
+| Static Site Generator | Eleventy 3.1.2 |
+| Templating | Nunjucks |
+| Styling | Tailwind CSS 3.4.18 + PostCSS |
+| Build Output | `public/` directory |
+| Data Pattern | JavaScript data files in `src/_data/` |
 
-**Initialization Commands:**
-
-```bash
-# Initialize Eleventy project
-mkdir mywebclass && cd mywebclass
-npm init -y
-npm install @11ty/eleventy@latest
-
-# Add Sanity client for data fetching
-npm install @sanity/client
-
-# Add dev dependencies for quality
-npm install -D eslint prettier stylelint
-```
-
-### Architectural Decisions to Make Manually
-
-Since we're not using a starter, these decisions remain open:
-- **Styling solution:** CSS approach (vanilla, PostCSS, Sass, Tailwind)
-- **Templating language:** Nunjucks, Liquid, or other
-- **Project structure:** Folder organization conventions
-- **Build tooling:** Additional processing (if any)
-- **Testing setup:** Playwright configuration
-
-These will be addressed in subsequent architectural decisions.
-
-## Core Architectural Decisions
-
-### Decision Summary
-
-| Category | Decision | Rationale |
-|----------|----------|-----------|
-| Templating | Nunjucks | 11ty community standard, powerful macros |
-| Styling | Tailwind CSS v4 | Rapid development, JIT purges unused CSS |
-| Project Structure | Monorepo | Single repo with `/studio` for Sanity |
-| Sanity Schemas | 4 content types | designStyle, gallerySubmission, article, author |
-| Client-side JS | Vanilla ES modules | Minimal footprint (~10KB), no bundler |
-| CI/CD | GitHub Actions | Full pipeline with quality gates |
-
-### Data Architecture
-
-**CMS:** Sanity CMS (hosted)
-- Build-time data fetching via `@sanity/client` + GROQ queries
-- Runtime mutations for form submissions only
-- Portable Text for rich content fields
-
-**Schemas:**
-- `designStyle` - Gallery entries with educational content
-- `gallerySubmission` - Student submissions with status workflow (submitted → approved/rejected)
-- `article` - Standalone educational content
-- `author` - Content attribution
+### Integration Architecture: Sanity CMS
 
 **Data Flow:**
 ```
-[Sanity Studio] → [Sanity API] → [Build-time GROQ] → [Static HTML]
-[Submission Form] → [Sanity Mutations API] → [gallerySubmission document]
+Sanity CMS → @11ty/eleventy-fetch (cached) → _data/*.js → Templates → Static HTML
+```
+
+**Studio Configuration:**
+- Standalone Sanity Studio in `/studio` directory
+- Schemas: `designStyle`, `gallerySubmission`, `article`, `author`
+- Instructor workflow via Sanity Studio native interface (MVP)
+
+**Build Trigger:**
+- Sanity webhook → GitHub Actions → Eleventy rebuild → GitHub Pages deploy
+
+**Form Submissions:**
+- Serverless function receives form POST
+- Mutates Sanity dataset with `pending` status
+- Triggers Discord webhook notification
+
+## Core Architectural Decisions
+
+### Decision Priority Analysis
+
+**Critical Decisions (Block Implementation):**
+- CMS Integration: Sanity with @11ty/eleventy-fetch
+- Form Handling: Make webhook endpoint
+- Build Pipeline: GitHub Actions with Sanity webhook trigger
+
+**Important Decisions (Shape Architecture):**
+- Image Optimization: Sanity Image URL (CDN)
+- CRM: Airtable free tier
+- Notifications: Make/Zapier automation
+
+**Deferred Decisions (Post-MVP):**
+- Custom instructor dashboard (using Sanity Studio for MVP)
+- Advanced analytics dashboards
+- User accounts for submitters
+
+### Data Architecture
+
+| Decision | Choice | Version/Details | Rationale |
+|----------|--------|-----------------|-----------|
+| Data Fetching | @11ty/eleventy-fetch | Latest | Built-in caching, simple API, webhooks ensure freshness |
+| Cache Duration | 1 hour | — | Safety net; webhook rebuilds handle real-time updates |
+| Image Optimization | Sanity Image URL | — | CDN-hosted, hotspot/crop support, no build overhead |
+| Schema Design | 4 document types | designStyle, gallerySubmission, article, author | Matches PRD requirements |
+
+### Authentication & Security
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Instructor Auth (MVP) | Sanity Studio native | No custom auth needed; instructors use Studio directly |
+| API Security | Environment variables | Sanity tokens, Make webhooks stored in env vars |
+| Form Security | Honeypot + validation | Client-side validation, hidden field for bot detection |
+| HTTPS | GitHub Pages default | Automatic SSL via GitHub |
+
+### API & Communication Patterns
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Form Submission | Make webhook endpoint | No-code, visual debugging, consolidates integrations |
+| Sanity Mutations | Via Make | Make receives form POST, creates Sanity document |
+| Discord Notifications | Via Make | Same flow triggers Discord webhook |
+| CRM Sync | Airtable via Make | Make copies submission data to Airtable |
+
+**Integration Flow:**
+```
+User submits form
+       ↓
+Form POST → Make Webhook
+       ↓
+Make Scenario:
+  1. Create Sanity document (status: pending)
+  2. Create Airtable record
+  3. Fire Discord webhook (#gallery-submissions)
+       ↓
+Sanity webhook → GitHub Actions
+       ↓
+Eleventy rebuild → GitHub Pages deploy
 ```
 
 ### Frontend Architecture
 
-**Templating:** Nunjucks
-- Layouts in `src/_includes/layouts/`
-- Components in `src/_includes/components/`
-- Data files in `src/_data/` (Sanity queries)
-
-**Styling:** Tailwind CSS v4
-- Input: `src/assets/css/main.css`
-- Output: Purged, minified CSS (<50KB budget)
-- Build integration via npm scripts (concurrent dev, sequential build)
-
-**Client-side JavaScript:** Vanilla ES modules
-- `consent.js` - Cookie banner, localStorage, GA4 gating
-- `submit-form.js` - Validation, Sanity mutation POST
-- `analytics.js` - GA4 initialization after consent
-- No bundler, progressive enhancement
-
-### Project Structure
-
-```
-mywebclass/
-├── src/
-│   ├── _data/              # Sanity GROQ queries
-│   ├── _includes/
-│   │   ├── layouts/        # base.njk, page.njk
-│   │   └── components/     # nav.njk, card.njk, consent-banner.njk
-│   ├── assets/
-│   │   ├── css/            # Tailwind input
-│   │   └── js/             # consent.js, submit-form.js, analytics.js
-│   ├── pages/              # about.njk, privacy.njk, submit.njk
-│   └── styles/             # Design style pages (from Sanity)
-├── studio/                 # Sanity Studio
-├── tests/                  # Playwright E2E
-├── .github/workflows/      # CI/CD
-├── _site/                  # Build output
-├── eleventy.config.js
-├── tailwind.config.js
-└── package.json
-```
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| State Management | None (static) | No client-side state needed for static site |
+| JavaScript | Minimal, vanilla | Cookie consent + mobile nav only |
+| Bundle Strategy | No bundler | Direct script includes, <50KB total |
+| CSS | Tailwind (build-time) | Already configured, tree-shaking via PostCSS |
 
 ### Infrastructure & Deployment
 
-**Hosting:** GitHub Pages (static output from `_site/`)
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Hosting | GitHub Pages | Free, simple, meets requirements |
+| CI/CD | GitHub Actions | Native integration, webhook support |
+| Build Triggers | Manual + Sanity webhook | Flexibility + automatic content updates |
+| Sanity Studio | Standalone /studio directory | Separate deploy or embedded in repo |
+| Environment Secrets | GitHub Secrets + Make | Sanity tokens, webhook URLs |
 
-**CI/CD Pipeline (GitHub Actions):**
-```
-PR:   lint → build → test → lighthouse
-Main: lint → build → test → lighthouse → deploy
-```
+### Decision Impact Analysis
 
-**Quality Gates:**
-- ESLint, Stylelint, Markdownlint must pass
-- Playwright tests must pass
-- Lighthouse scores ≥90
+**Implementation Sequence:**
+1. Sanity Studio setup with schemas
+2. Data fetching layer (eleventy-fetch + Sanity client)
+3. Template updates to use Sanity data
+4. Make scenarios (form → Sanity → Discord → Airtable)
+5. GitHub Actions webhook trigger
+6. Data migration from mock data to Sanity
 
-**Environment Secrets:**
-- `SANITY_PROJECT_ID`
-- `SANITY_DATASET`
-- `SANITY_TOKEN` (for mutations)
-- `GA4_MEASUREMENT_ID`
-- `DISCORD_WEBHOOK_URL`
-
-### Security Considerations
-
-- Form submissions over HTTPS only
-- Sanity mutation token stored in GitHub Secrets, never exposed client-side
-- Client-side form uses Sanity's public mutation endpoint with write token server-side or edge function
-- GA4 only loads after explicit user consent
-- No user authentication in MVP (Sanity Studio handles admin auth)
+**Cross-Component Dependencies:**
+- Make webhook URL needed before form can work
+- Sanity project ID/dataset needed for all data fetching
+- GitHub Actions workflow needs Sanity webhook secret
 
 ## Implementation Patterns & Consistency Rules
 
-### Pattern Summary
+### Pattern Categories Defined
 
-These patterns ensure AI agents and developers write compatible, consistent code.
+**Established Patterns (from existing codebase):** 6 areas already consistent
+**New Patterns Defined:** 5 areas for Sanity/Make integration
 
-| Category | Convention |
-|----------|------------|
-| File naming | kebab-case (except Sanity schemas: camelCase) |
-| Templates | includes for partials, macros for parameterized components |
-| Data fetching | Plural file names, shared client, explicit GROQ projection |
-| Client JS | Object literal modules, data-* attributes for DOM hooks |
-| Tailwind | Ordered classes, @layer for reusables, always focus states |
-| Forms | Client validators, aria-* for errors, role="alert" for messages |
+### Naming Patterns
 
-### File & Directory Naming
+**File & Component Naming (Established):**
+- Files: kebab-case (`cookie-consent.js`, `navigation.njk`)
+- CSS classes: Tailwind utilities + custom components (`.btn-primary`, `.card`)
+- Data files: camelCase exports (`designStyles.js` → `designStyles` variable)
+- Template variables: camelCase (`designStyles`, `site.title`, `submission.demoUrl`)
 
-**Convention:** kebab-case for all files except Sanity schemas
+**Sanity Schema Naming (New):**
 
+| Element | Convention | Example |
+|---------|------------|---------|
+| Document types | camelCase | `designStyle`, `gallerySubmission` |
+| Field names | camelCase | `accentColor`, `submittedDate` |
+| Slug fields | Always named `slug` | `slug: { type: 'slug' }` |
+| Reference fields | Descriptive or suffix `Ref` | `styleRef`, `author` |
+| Boolean fields | Prefix `is` or `has` | `isFeatured`, `hasConsent` |
+| Status fields | Lowercase string enum | `pending`, `approved`, `rejected` |
+
+### Structure Patterns
+
+**Directory Structure (Established):**
 ```
-✓ src/_includes/components/style-card.njk
-✓ src/assets/js/submit-form.js
-✓ src/pages/privacy-policy.njk
-✓ studio/schemas/designStyle.js  (Sanity convention)
-
-✗ src/_includes/components/StyleCard.njk
-✗ src/assets/js/submitForm.js
-```
-
-### Nunjucks Template Patterns
-
-**Layout inheritance:**
-```nunjucks
-{% extends "layouts/base.njk" %}
-{% block content %}...{% endblock %}
-```
-
-**Simple partials (nav, footer):**
-```nunjucks
-{% include "components/nav.njk" %}
-```
-
-**Parameterized components:**
-```nunjucks
-{% from "components/button.njk" import button %}
-{{ button("View Demo", style.demoUrl, "primary") }}
+src/
+├── _data/           # Data files (Sanity fetchers)
+├── _includes/       # Layouts, components, macros
+│   ├── layouts/
+│   ├── components/
+│   └── macros/
+├── pages/           # Page templates
+├── scripts/         # Client-side JavaScript
+└── styles/          # CSS (Tailwind entry)
+studio/              # Sanity Studio (separate)
 ```
 
-### Sanity Data Fetching Patterns
-
-**Data file structure:**
+**Data File Pattern:**
 ```javascript
-// src/_data/designStyles.js
-const client = require('../lib/sanity-client.js');
+// src/_data/{documentType}s.js
+import Fetch from "@11ty/eleventy-fetch";
 
-module.exports = async function() {
-  return await client.fetch(`
-    *[_type == "designStyle"] | order(title asc) {
-      _id,
-      title,
-      slug,
-      "imageUrl": image.asset->url,
-      demoUrl
-    }
-  `);
-};
-```
+const QUERY = encodeURIComponent('*[_type == "designStyle"]');
+const URL = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
 
-**Rules:**
-- Data file names match content type (plural)
-- Shared client in `src/lib/sanity-client.js`
-- Always project specific fields (never `*[_type == "foo"]` without projection)
-- Use GROQ dereferencing for assets: `"imageUrl": image.asset->url`
-
-### Client-Side JavaScript Patterns
-
-**Module structure:**
-```javascript
-const ModuleName = {
-  STORAGE_KEY: 'key-name',
-
-  init() { /* ... */ },
-  methodName() { /* ... */ },
-};
-
-document.addEventListener('DOMContentLoaded', () => ModuleName.init());
-```
-
-**DOM selection (use data attributes):**
-```javascript
-const form = document.querySelector('[data-form="submission"]');
-```
-
-**Error handling:**
-```javascript
-try {
-  const response = await fetch(url, options);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return await response.json();
-} catch (error) {
-  console.error('Context:', error);
-  this.showError('User-friendly message');
-}
-```
-
-### Tailwind CSS Patterns
-
-**Class ordering:** Layout → Spacing → Sizing → Typography → Colors → Effects → States
-```html
-<div class="flex items-center gap-4 p-6 w-full text-lg text-gray-800 bg-white rounded-lg shadow-md hover:shadow-lg">
-```
-
-**Reusable components (use @layer):**
-```css
-@layer components {
-  .btn-primary {
-    @apply inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500;
+export default async function() {
+  try {
+    const data = await Fetch(URL, { duration: "1h", type: "json" });
+    return data.result;
+  } catch (e) {
+    console.error("Failed to fetch:", e.message);
+    return [];
   }
 }
 ```
 
-**Accessibility:** Always include focus states
-```html
-<a class="... focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+### Format Patterns
+
+**Form → Sanity Field Mapping:**
+
+| Form Field | Sanity Field | Type |
+|------------|--------------|------|
+| `name` | `submitterName` | string |
+| `email` | `submitterEmail` | string |
+| `style` | `styleRef` | reference |
+| `demoUrl` | `demoUrl` | url |
+| `screenshot` | `screenshot` | image |
+| `explanation` | `authenticityExplanation` | text |
+| `consent` | `hasPublicDisplayConsent` | boolean |
+| `marketing` | `hasMarketingConsent` | boolean |
+| (auto) | `status` | string: `pending` |
+| (auto) | `submittedAt` | datetime |
+
+**Sanity Document Status Values:**
+- `pending` — Initial state, awaiting review
+- `approved` — Visible in public gallery
+- `rejected` — Not displayed, feedback provided
+- `featured` — Approved + highlighted (via `isFeatured` boolean)
+
+### Communication Patterns
+
+**Make Webhook Payload (Form → Make):**
+```json
+{
+  "name": "Alex Chen",
+  "email": "alex@njit.edu",
+  "style": "swiss",
+  "demoUrl": "https://example.com/demo",
+  "explanation": "Grid-based layout with Helvetica...",
+  "consent": true,
+  "marketing": false,
+  "timestamp": "2025-01-15T14:30:00Z"
+}
 ```
 
-### Form & Error Handling Patterns
-
-**Validation:**
-```javascript
-const validators = {
-  required: (value) => value.trim() !== '' || 'This field is required',
-  email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Valid email required',
-  url: (value) => /^https?:\/\/.+/.test(value) || 'Valid URL required',
-};
+**Discord Notification Format:**
+```
+🎨 New Submission: "{style}" by {name}
+Demo: {demoUrl}
 ```
 
-**Error display:**
-```html
-<input aria-invalid="true" aria-describedby="field-error" class="border-red-500">
-<p id="field-error" class="mt-1 text-sm text-red-600">Error message</p>
-```
+### Process Patterns
 
-**Form states:**
-- **Submitting:** Disable button, show "Submitting..."
-- **Success:** `role="alert"` green message, reset form
-- **Error:** `role="alert"` red message, preserve user input
+**Error Handling:**
+
+| Situation | Pattern |
+|-----------|---------|
+| Sanity fetch fails | Log error, return `[]`, build continues |
+| Form submission fails | Show error message, retain form data |
+| Missing image | Display style emoji/color block as fallback |
+| Empty gallery state | Show "No submissions yet" with CTA |
+| Make webhook fails | Make handles retries; form shows success |
+
+**Template Consistency:**
+
+| Pattern | Convention |
+|---------|------------|
+| Empty checks | `{% if items.length %}` (explicit length check) |
+| Loop variables | Descriptive names (`style`, `submission`) |
+| Macro params | Object for 3+ parameters |
+| Includes | `{% include "components/card.njk" %}` |
 
 ### Enforcement Guidelines
 
 **All AI Agents MUST:**
-- Follow file naming conventions (kebab-case, Sanity exception)
-- Use data-* attributes for JavaScript DOM hooks (not classes/IDs)
-- Include focus states on all interactive elements
-- Use aria-* attributes for form validation errors
-- Project specific fields in GROQ queries (no wildcards)
-- Use the shared Sanity client (never instantiate new clients)
+1. Use camelCase for all Sanity schema fields
+2. Use kebab-case for all file names
+3. Wrap Sanity fetches in try/catch with empty array fallback
+4. Map form fields to Sanity fields using the documented mapping
+5. Use `pending`/`approved`/`rejected` status values exactly
+
+**Pattern Verification:**
+- ESLint enforces JavaScript naming conventions
+- Sanity schema validation enforces field types
+- Build failure on Sanity fetch = check credentials, not code
+
+### Pattern Examples
+
+**Good:**
+```javascript
+// ✓ Correct data file pattern
+export default async function() {
+  try {
+    const data = await Fetch(URL, { duration: "1h", type: "json" });
+    return data.result;
+  } catch (e) {
+    return [];
+  }
+}
+```
+
+```nunjucks
+{# ✓ Correct template pattern #}
+{% if designStyles.length %}
+  {% for style in designStyles %}
+    {% include "components/card.njk" %}
+  {% endfor %}
+{% else %}
+  <p>No styles available.</p>
+{% endif %}
+```
+
+**Anti-Patterns:**
+```javascript
+// ✗ No error handling
+export default async function() {
+  const data = await Fetch(URL, { type: "json" });
+  return data.result; // Build fails if Sanity unreachable
+}
+```
+
+```nunjucks
+{# ✗ Truthy check on array (always true) #}
+{% if designStyles %}
+  ...
+{% endif %}
+```
 
 ## Project Structure & Boundaries
 
 ### Complete Project Directory Structure
 
 ```
-mywebclass/
+MyWebClass/
+├── .eleventy.js                    # Eleventy configuration
+├── .env                            # Environment variables (gitignored)
+├── .env.example                    # Environment template
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── postcss.config.js               # PostCSS configuration
+├── tailwind.config.js              # Tailwind CSS configuration
+├── README.md
+│
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                    # Lint → Build → Test → Lighthouse → Deploy
-├── src/
-│   ├── _data/
-│   │   ├── designStyles.js           # GROQ: all design styles
-│   │   ├── approvedSubmissions.js    # GROQ: approved gallery submissions
-│   │   └── site.js                   # Site metadata
+│       ├── build.yml               # Main CI/CD workflow
+│       └── sanity-rebuild.yml      # Webhook-triggered rebuild
+│
+├── docs/                           # Project documentation
+│   ├── index.md                    # Documentation index
+│   ├── architecture.md             # This document
+│   ├── prd.md                      # Product requirements
+│   └── swiss-lineage.md            # UI specifications
+│
+├── src/                            # Eleventy source
+│   ├── _data/                      # Global data files
+│   │   ├── site.js                 # Site configuration
+│   │   ├── designStyles.js         # → Sanity: designStyle documents
+│   │   ├── submissions.js          # → Sanity: gallerySubmission documents
+│   │   └── sanity.js               # Sanity client configuration
+│   │
 │   ├── _includes/
 │   │   ├── layouts/
-│   │   │   ├── base.njk              # HTML shell, meta, scripts
-│   │   │   ├── page.njk              # Standard page layout
-│   │   │   └── style-detail.njk      # Design style detail layout
-│   │   └── components/
-│   │       ├── nav.njk               # Site navigation
-│   │       ├── footer.njk            # Site footer
-│   │       ├── style-card.njk        # Gallery card component
-│   │       ├── submission-card.njk   # Approved submission card
-│   │       ├── consent-banner.njk    # GDPR cookie banner
-│   │       └── button.njk            # Reusable button macro
-│   ├── assets/
-│   │   ├── css/
-│   │   │   └── main.css              # Tailwind input + @layer components
-│   │   ├── js/
-│   │   │   ├── consent.js            # Cookie consent + GA4 gating
-│   │   │   ├── submit-form.js        # Form validation + Sanity mutation
-│   │   │   └── analytics.js          # GA4 initialization
-│   │   └── images/
-│   │       └── logo.svg              # Site logo
-│   ├── lib/
-│   │   └── sanity-client.js          # Shared Sanity client instance
+│   │   │   ├── base.njk            # HTML document shell
+│   │   │   └── page.njk            # Standard content page
+│   │   ├── components/
+│   │   │   ├── navigation.njk      # Header navigation
+│   │   │   ├── footer.njk          # Site footer
+│   │   │   └── cookie-banner.njk   # GDPR consent
+│   │   └── macros/
+│   │       ├── button.njk          # Button variants
+│   │       ├── card.njk            # Gallery card
+│   │       ├── form-field.njk      # Form inputs
+│   │       └── badge.njk           # Status badges
+│   │
 │   ├── pages/
-│   │   ├── about.njk                 # About MyWebClass
-│   │   ├── submit.njk                # Submission form page
-│   │   ├── privacy.njk               # Privacy policy
-│   │   └── cookies.njk               # Cookie policy
-│   ├── styles/
-│   │   ├── styles.json               # Collection definition
-│   │   └── styles.njk                # Template for /styles/{slug}
-│   ├── gallery.njk                   # Gallery listing page
-│   └── index.njk                     # Homepage
-├── studio/
-│   ├── schemas/
-│   │   ├── index.js                  # Schema exports
-│   │   ├── designStyle.js            # Design style content type
-│   │   ├── gallerySubmission.js      # Submission with status workflow
-│   │   ├── article.js                # Educational articles
-│   │   └── author.js                 # Content attribution
-│   ├── sanity.config.js              # Studio configuration
-│   ├── sanity.cli.js                 # CLI configuration
-│   └── package.json                  # Studio dependencies
-├── tests/
-│   ├── e2e/
-│   │   ├── gallery.spec.js           # Gallery browsing tests
-│   │   ├── submission.spec.js        # Form submission tests
-│   │   └── consent.spec.js           # Cookie consent tests
-│   └── fixtures/
-│       └── test-data.json            # Test fixtures
-├── _site/                            # Build output (gitignored)
-├── .env.example                      # Environment template
-├── .eslintrc.js                      # ESLint config
-├── .prettierrc                       # Prettier config
-├── .stylelintrc.json                 # Stylelint config
-├── .gitignore
-├── eleventy.config.js                # Eleventy configuration
-├── tailwind.config.js                # Tailwind configuration
-├── playwright.config.js              # Playwright configuration
-├── package.json                      # Project dependencies & scripts
-└── README.md                         # Project documentation
+│   │   ├── index.njk               # Homepage
+│   │   ├── about.njk               # About page
+│   │   ├── submit.njk              # Submission form → Make webhook
+│   │   ├── admin.njk               # Dashboard (links to Sanity Studio)
+│   │   ├── 404.njk                 # Not found
+│   │   ├── legal/
+│   │   │   ├── privacy.njk
+│   │   │   ├── terms.njk
+│   │   │   └── cookies.njk
+│   │   └── styles/
+│   │       └── style-detail.njk    # Paginated design style pages
+│   │
+│   ├── scripts/
+│   │   ├── cookie-consent.js       # Cookie banner logic
+│   │   └── navigation.js           # Mobile menu toggle
+│   │
+│   └── styles/
+│       └── main.css                # Tailwind CSS entry
+│
+├── studio/                         # Sanity Studio (NEW)
+│   ├── package.json
+│   ├── sanity.config.js            # Studio configuration
+│   ├── sanity.cli.js               # CLI configuration
+│   └── schemas/
+│       ├── index.js                # Schema exports
+│       ├── designStyle.js          # Design style document
+│       ├── gallerySubmission.js    # Submission document
+│       ├── article.js              # Educational content
+│       └── author.js               # Author profiles
+│
+├── public/                         # Build output (gitignored)
+│
+└── tests/                          # Test files
+    └── e2e/
+        └── gallery.spec.js
 ```
 
 ### Architectural Boundaries
 
-**Data Flow Boundaries:**
-
+**Data Flow Boundary:**
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        BUILD TIME                                │
-│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐    │
-│  │ Sanity API   │────▶│ _data/*.js   │────▶│ Static HTML  │    │
-│  │ (GROQ fetch) │     │ (queries)    │     │ (_site/)     │    │
-│  └──────────────┘     └──────────────┘     └──────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                        RUNTIME (Browser)                         │
-│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐    │
-│  │ User Form    │────▶│ submit-form  │────▶│ Sanity API   │    │
-│  │ Input        │     │ .js          │     │ (mutation)   │    │
-│  └──────────────┘     └──────────────┘     └──────────────┘    │
-│                                                                  │
-│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐    │
-│  │ User Consent │────▶│ consent.js   │────▶│ GA4 / No GA4 │    │
-│  └──────────────┘     └──────────────┘     └──────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
+Sanity CMS (Cloud)
+       ↓ GROQ Query
+src/_data/*.js (Build-time fetch)
+       ↓ Eleventy Data Cascade
+src/pages/*.njk (Templates)
+       ↓ Build
+public/ (Static HTML)
+       ↓ Deploy
+GitHub Pages (CDN)
 ```
 
-**Component Boundaries:**
+**Form Submission Boundary:**
+```
+src/pages/submit.njk (Form)
+       ↓ POST
+Make Webhook (External)
+       ↓ Scenario
+├── Sanity API (Create document)
+├── Airtable API (Create record)
+└── Discord API (Send notification)
+```
 
-| Boundary | Description |
-|----------|-------------|
-| `src/` ↔ `studio/` | Complete separation; studio is its own npm project |
-| `_data/` ↔ templates | Data files export arrays/objects consumed by Nunjucks |
-| `assets/js/` ↔ DOM | JS uses `data-*` attributes, never touches template logic |
-| `_includes/layouts/` ↔ pages | Pages extend layouts, define content blocks |
-| `_includes/components/` ↔ pages | Components included/imported, never standalone |
+**Admin Boundary:**
+```
+Instructors → studio.sanity.io/{project}
+                     ↓
+              Sanity Studio UI
+                     ↓
+              Direct document editing
+                     ↓
+              Webhook → GitHub Actions → Rebuild
+```
 
 ### Requirements to Structure Mapping
 
-**Gallery & Content (FR1-FR8):**
-
-| Requirement | File(s) |
-|-------------|---------|
-| FR1: Browse gallery | `src/gallery.njk`, `src/_data/designStyles.js` |
-| FR2: Detail page | `src/styles/styles.njk` (pagination template) |
-| FR3: Live demo link | `src/_includes/components/style-card.njk` |
-| FR4-FR6: Educational content | `studio/schemas/designStyle.js` (Portable Text fields) |
-| FR7: Featured on homepage | `src/index.njk`, `src/_data/designStyles.js` (featured filter) |
-| FR8: Navigation | `src/_includes/components/nav.njk` |
-
-**Submission Workflow (FR9-FR16):**
-
-| Requirement | File(s) |
-|-------------|---------|
-| FR9-FR15: Submission form | `src/pages/submit.njk`, `src/assets/js/submit-form.js` |
-| FR16: Confirmation | `src/assets/js/submit-form.js` (success state) |
-
-**Review & Moderation (FR17-FR21):**
-
-| Requirement | File(s) |
-|-------------|---------|
-| FR17-FR19: Review in Studio | `studio/schemas/gallerySubmission.js` |
-| FR20-FR21: Approved only | `src/_data/approvedSubmissions.js` (status filter) |
-
-**Integrations (FR29-FR32):**
-
-| Requirement | File(s) |
-|-------------|---------|
-| FR29: Discord notification | Sanity webhook (dashboard config, no code) |
-| FR30: CRM sync | Zapier/Make (external, no code) |
-| FR31-FR32: Analytics | `src/assets/js/analytics.js`, `src/assets/js/consent.js` |
-
-**Compliance (FR33-FR37):**
-
-| Requirement | File(s) |
-|-------------|---------|
-| FR33-FR34: Cookie banner | `src/_includes/components/consent-banner.njk`, `src/assets/js/consent.js` |
-| FR35-FR36: Policy pages | `src/pages/privacy.njk`, `src/pages/cookies.njk` |
-| FR37: Respect consent | `src/assets/js/consent.js` → `src/assets/js/analytics.js` |
+| PRD Requirement | Location |
+|-----------------|----------|
+| FR1-7: Design Gallery | `src/pages/index.njk`, `src/pages/styles/`, `src/_data/designStyles.js` |
+| FR8-16: Submission | `src/pages/submit.njk` → Make webhook |
+| FR17-24: Instructor Dashboard | Sanity Studio (`studio/`) |
+| FR25-28: Content Curation | Sanity Studio + `isFeatured` field |
+| FR29-35: Privacy/Consent | `src/scripts/cookie-consent.js`, `src/pages/legal/` |
+| FR36-40: Integrations | Make scenarios (external) |
+| FR41-45: CMS | `studio/schemas/`, `src/_data/` |
+| FR46-50: Accessibility | All templates, `src/styles/main.css` |
 
 ### Integration Points
 
-**External Integrations:**
+| Integration | Trigger | Endpoint |
+|-------------|---------|----------|
+| Sanity → Eleventy | Build time | `https://{project}.api.sanity.io/...` |
+| Form → Make | User submit | `https://hook.make.com/{scenario}` |
+| Make → Sanity | Form received | Sanity Mutations API |
+| Make → Airtable | Form received | Airtable API |
+| Make → Discord | Form received | Discord Webhook URL |
+| Sanity → GitHub | Content change | `repository_dispatch` event |
 
-| Service | Integration Method | Configuration |
-|---------|-------------------|---------------|
-| Sanity API | `@sanity/client` | `SANITY_PROJECT_ID`, `SANITY_DATASET` |
-| Discord | Sanity webhook | Webhook URL in Sanity dashboard |
-| CRM | Zapier/Make | External automation (no code) |
-| GA4 | gtag.js | `GA4_MEASUREMENT_ID`, consent-gated |
-| GitHub Pages | GitHub Actions | `.github/workflows/ci.yml` |
+### Environment Variables
 
-**npm Scripts (package.json):**
-
-```json
-{
-  "scripts": {
-    "dev": "npm-run-all -p dev:*",
-    "dev:11ty": "eleventy --serve",
-    "dev:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --watch",
-    "build": "npm-run-all build:css build:11ty",
-    "build:css": "tailwindcss -i src/assets/css/main.css -o _site/assets/css/main.css --minify",
-    "build:11ty": "eleventy",
-    "lint": "npm-run-all -p lint:*",
-    "lint:js": "eslint src/**/*.js",
-    "lint:css": "stylelint src/**/*.css",
-    "lint:md": "markdownlint docs/**/*.md",
-    "test": "playwright test",
-    "lighthouse": "lhci autorun"
-  }
-}
+```bash
+# .env.example
+SANITY_PROJECT_ID=your-project-id
+SANITY_DATASET=production
+SANITY_API_TOKEN=sk-...         # Read token for build
+MAKE_WEBHOOK_URL=https://hook.make.com/...
 ```
+
+### File Organization Patterns
+
+**Configuration Files:** Root directory for build tools, `studio/` for Sanity config
+**Source Organization:** Feature-based within `src/pages/`, shared components in `_includes/`
+**Test Organization:** `tests/e2e/` for Playwright tests
+**Asset Organization:** `src/styles/` for CSS, `src/scripts/` for JS, `public/` for build output
 
 ## Architecture Validation Results
 
 ### Coherence Validation ✅
 
-**Decision Compatibility:**
-- Eleventy v3.1.2 + Nunjucks + Tailwind CSS v4: Fully compatible
-- Sanity CMS for unified content and submissions: Coherent data model
-- Vanilla ES modules without bundler: Aligns with static site simplicity
-- GitHub Actions CI/CD with quality gates: Supports all NFRs
+**Decision Compatibility:** All technology choices (Eleventy, Sanity, Tailwind, Make) work together without conflicts. Versions are current and mutually compatible.
 
-**Pattern Consistency:**
-- All naming conventions are consistent (kebab-case, Sanity exception)
-- Template patterns support the chosen architecture
-- Data fetching patterns align with Sanity + Eleventy integration
+**Pattern Consistency:** Implementation patterns support architectural decisions. Naming conventions are consistent (camelCase for JS/Sanity, kebab-case for files).
 
-**Structure Alignment:**
-- Project structure supports all architectural decisions
-- Clear boundaries between frontend and studio
-- Integration points well-defined
+**Structure Alignment:** Project structure supports all architectural decisions with clear boundaries between Eleventy source, Sanity Studio, and build output.
 
 ### Requirements Coverage ✅
 
-**Functional Requirements:**
-- FR1-FR8 (Gallery & Content): Fully supported by Sanity + Eleventy
-- FR9-FR16 (Submission): Supported by gallerySubmission schema + mutation API
-- FR17-FR21 (Review): Supported by Sanity Studio workflow
-- FR22-FR28 (Content Management): Fully supported by Sanity schemas
-- FR29-FR32 (Integrations): Discord webhook, CRM via Zapier, GA4 consent-gated
-- FR33-FR37 (Compliance): Cookie consent, privacy pages, GDPR patterns
-- FR38-FR41 (Navigation): Standard Eleventy navigation patterns
+**Functional Requirements:** All 50 FRs mapped to specific architectural components and file locations.
 
-**Non-Functional Requirements:**
-- Performance: Tailwind purging, static HTML, <50KB CSS budget
-- Security: HTTPS-only, Sanity token in secrets, consent gating
-- Accessibility: WCAG AA patterns defined (focus states, aria-*)
-- Build: CI pipeline with lint, test, Lighthouse gates
+**Non-Functional Requirements:** All 38 NFRs addressed through technology choices (static hosting for performance, Sanity auth for security, Swiss design system for accessibility).
 
 ### Implementation Readiness ✅
 
-**Decision Completeness:**
-- All critical decisions documented with specific versions
-- Implementation patterns comprehensive with code examples
-- Consistency rules clear and enforceable
+**Decision Completeness:** All critical decisions documented with rationale.
 
-**Structure Completeness:**
-- Complete project tree with all files defined
-- Requirements mapped to specific file locations
-- Component boundaries clearly established
+**Pattern Completeness:** Naming, structure, format, communication, and process patterns fully specified with examples.
 
-### Migration Requirements
-
-**IMPORTANT:** Current Bolt implementation differs from target architecture. Migration needed:
-
-**Phase 1: Infrastructure**
-- [ ] Upgrade Eleventy from v2.0.1 to v3.1.2
-- [ ] Install and configure Tailwind CSS v4
-- [ ] Restructure folders: `js/` → `assets/js/`, `css/` → `assets/css/`
-- [ ] Rename `partials/` → `components/`
-
-**Phase 2: Sanity Schema**
-- [ ] Create `studio/schemas/gallerySubmission.js` schema
-- [ ] Update `studio/schemas/index.js` to export new schema
-- [ ] Deploy schema changes to Sanity
-
-**Phase 3: Submission Migration**
-- [ ] Replace Supabase submission flow with Sanity mutations
-- [ ] Remove Supabase dependencies
-- [ ] Update `submit-form.js` to use Sanity API
-- [ ] Migrate existing submissions from Supabase to Sanity (if any)
-
-**Phase 4: Styling Migration**
-- [ ] Convert plain CSS to Tailwind utility classes
-- [ ] Create `@layer components` for reusable patterns
-- [ ] Remove old CSS files
+**Structure Completeness:** Complete directory tree with every file and its purpose defined.
 
 ### Architecture Completeness Checklist
 
 **✅ Requirements Analysis**
 - [x] Project context thoroughly analyzed
-- [x] Scale and complexity assessed
-- [x] Technical constraints identified
+- [x] Scale and complexity assessed (Medium)
+- [x] Technical constraints identified (brownfield, Eleventy)
 - [x] Cross-cutting concerns mapped
 
 **✅ Architectural Decisions**
-- [x] Critical decisions documented with versions
+- [x] Critical decisions documented (Sanity, Make, Airtable)
 - [x] Technology stack fully specified
 - [x] Integration patterns defined
 - [x] Performance considerations addressed
@@ -666,20 +618,21 @@ mywebclass/
 
 ### Architecture Readiness Assessment
 
-**Overall Status:** READY FOR IMPLEMENTATION (after migration)
+**Overall Status:** ✅ READY FOR IMPLEMENTATION
 
 **Confidence Level:** High
 
 **Key Strengths:**
-- Unified data model with Sanity for both content and submissions
-- Clear separation between frontend and CMS
-- Comprehensive patterns prevent AI agent conflicts
-- Full requirements coverage with explicit file mappings
+- Leverages existing brownfield codebase
+- No-code integrations reduce complexity (Make, Airtable)
+- Sanity Studio eliminates custom auth for MVP
+- Clear separation of concerns
 
-**Migration Notes:**
-- Current Bolt implementation uses Supabase for submissions
-- Architecture targets Sanity-only approach per PRD specifications
-- Migration plan provided in phases above
+**Areas for Future Enhancement:**
+- Custom instructor dashboard (post-MVP)
+- GA4 analytics configuration details
+- Email notification system
+- User accounts for submitters
 
 ## Architecture Completion Summary
 
@@ -687,25 +640,25 @@ mywebclass/
 
 **Architecture Decision Workflow:** COMPLETED ✅
 **Total Steps Completed:** 8
-**Date Completed:** 2025-12-05
+**Date Completed:** 2025-12-06
 **Document Location:** docs/architecture.md
 
 ### Final Architecture Deliverables
 
-**Complete Architecture Document**
+**📋 Complete Architecture Document**
 - All architectural decisions documented with specific versions
 - Implementation patterns ensuring AI agent consistency
 - Complete project structure with all files and directories
 - Requirements to architecture mapping
 - Validation confirming coherence and completeness
 
-**Implementation Ready Foundation**
-- 6 core architectural decisions made
-- 6 implementation pattern categories defined
-- 8+ architectural components specified
-- 41 functional requirements fully supported
+**🏗️ Implementation Ready Foundation**
+- 15+ architectural decisions made
+- 5 implementation pattern categories defined
+- 12-15 architectural components specified
+- 88 requirements (50 FR + 38 NFR) fully supported
 
-**AI Agent Implementation Guide**
+**📚 AI Agent Implementation Guide**
 - Technology stack with verified versions
 - Consistency rules that prevent implementation conflicts
 - Project structure with clear boundaries
@@ -714,21 +667,23 @@ mywebclass/
 ### Implementation Handoff
 
 **For AI Agents:**
-This architecture document is your complete guide for implementing MyWebClass. Follow all decisions, patterns, and structures exactly as documented.
+This architecture document is your complete guide for implementing is373-final. Follow all decisions, patterns, and structures exactly as documented.
 
 **First Implementation Priority:**
-Execute migration phases before new feature development:
-1. Infrastructure migration (Eleventy upgrade, Tailwind setup)
-2. Sanity schema addition (gallerySubmission)
-3. Supabase → Sanity submission migration
-4. CSS → Tailwind migration
+1. Initialize Sanity Studio in `/studio` directory
+2. Create Sanity schemas (designStyle, gallerySubmission, article, author)
+3. Set up data fetching layer (`src/_data/sanity.js`, `designStyles.js`)
+4. Configure Make webhook scenario
+5. Update form to POST to Make webhook
 
 **Development Sequence:**
-1. Complete migration phases above
-2. Initialize project structure per architecture
-3. Implement core architectural foundations
-4. Build features following established patterns
-5. Maintain consistency with documented rules
+1. Initialize Sanity project and deploy schemas
+2. Set up environment variables (Sanity credentials)
+3. Create data fetching layer with eleventy-fetch
+4. Update templates to use Sanity data
+5. Configure Make scenario (form → Sanity → Discord → Airtable)
+6. Set up GitHub Actions webhook trigger
+7. Migrate mock data to Sanity
 
 ### Quality Assurance Checklist
 
@@ -754,6 +709,7 @@ Execute migration phases before new feature development:
 
 **Architecture Status:** READY FOR IMPLEMENTATION ✅
 
-**Next Phase:** Begin migration and implementation using the architectural decisions and patterns documented herein.
+**Next Phase:** Begin implementation using the architectural decisions and patterns documented herein.
 
 **Document Maintenance:** Update this architecture when major technical decisions are made during implementation.
+

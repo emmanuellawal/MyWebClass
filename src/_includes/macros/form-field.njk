@@ -1,0 +1,78 @@
+{% macro input(name, label, type="text", placeholder="", required=false, helpText="") %}
+<div class="form-group">
+  <label for="{{ name }}" class="form-label">
+    {{ label }}
+    {% if required %}<span class="text-swiss-red">*</span>{% endif %}
+  </label>
+  <input
+    type="{{ type }}"
+    id="{{ name }}"
+    name="{{ name }}"
+    class="form-input"
+    placeholder="{{ placeholder }}"
+    {% if required %}required{% endif %}
+    {% if type == 'email' %}autocomplete="email"{% endif %}
+  />
+  {% if helpText %}
+  <p class="form-helper">{{ helpText }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro select(name, label, options, required=false, helpText="") %}
+<div class="form-group">
+  <label for="{{ name }}" class="form-label">
+    {{ label }}
+    {% if required %}<span class="text-swiss-red">*</span>{% endif %}
+  </label>
+  <select
+    id="{{ name }}"
+    name="{{ name }}"
+    class="form-input bg-white"
+    {% if required %}required{% endif %}
+  >
+    <option value="">Select {{ label | lower }}...</option>
+    {% for option in options %}
+    <option value="{{ option.value }}">{{ option.label }}</option>
+    {% endfor %}
+  </select>
+  {% if helpText %}
+  <p class="form-helper">{{ helpText }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro textarea(name, label, rows=5, placeholder="", required=false, helpText="") %}
+<div class="form-group">
+  <label for="{{ name }}" class="form-label">
+    {{ label }}
+    {% if required %}<span class="text-swiss-red">*</span>{% endif %}
+  </label>
+  <textarea
+    id="{{ name }}"
+    name="{{ name }}"
+    rows="{{ rows }}"
+    class="form-input resize-none"
+    placeholder="{{ placeholder }}"
+    {% if required %}required{% endif %}
+  ></textarea>
+  {% if helpText %}
+  <p class="form-helper">{{ helpText }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro checkbox(name, label, required=false) %}
+<div class="flex items-start gap-3">
+  <input
+    type="checkbox"
+    id="{{ name }}"
+    name="{{ name }}"
+    class="mt-1 w-5 h-5"
+    {% if required %}required{% endif %}
+  />
+  <label for="{{ name }}" class="text-sm text-neutral-600">
+    {{ label | safe }}
+  </label>
+</div>
+{% endmacro %}

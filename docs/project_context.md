@@ -1,209 +1,161 @@
----
-project_name: 'MyWebClass'
-user_name: 'Jay'
-date: '2025-12-05'
-sections_completed: ['technology_stack', 'implementation_rules', 'anti_patterns', 'testing', 'migration']
-status: 'complete'
-rule_count: 35
-optimized_for_llm: true
----
+# Project Context: is373-final
 
-# Project Context for AI Agents
+> AI Agent Reference Guide — Read before implementing any code
 
-_This file contains critical rules and patterns that AI agents must follow when implementing code in this project. Focus on unobvious details that agents might otherwise miss._
+## Project Overview
 
----
+**Type:** Static Web Application with Headless CMS (JAMstack)
+**Stack:** Eleventy 3.1.2 + Sanity CMS + Tailwind CSS 3.4.18
+**Deployment:** GitHub Pages
+**Status:** Brownfield (existing codebase)
 
-## Technology Stack & Versions
+## Critical Rules
 
-**Target Stack (after migration):**
-- Eleventy: v3.1.2
-- Sanity CMS: v6.10.0
-- Tailwind CSS: v4
-- Nunjucks: latest
-- Playwright: v1.40.1
-- Node.js: v20+
+### DO
 
-**Build Tools:**
-- ESLint: v8.56.0
-- Prettier: v3.1.1
-- Stylelint: v16.1.0
-- Markdownlint: v0.38.0
+- Use `@11ty/eleventy-fetch` for all Sanity data fetching with 1-hour cache
+- Wrap all Sanity fetches in try/catch, return empty array on failure
+- Use camelCase for Sanity schema fields (`submitterName`, `isFeatured`)
+- Use kebab-case for all file names (`cookie-consent.js`, `navigation.njk`)
+- Check array length explicitly: `{% if items.length %}` not `{% if items %}`
+- Use descriptive loop variables: `style`, `submission` not `item`, `s`
+- Follow existing Swiss design system classes from `swiss-lineage.md`
 
-**Current State (pre-migration):**
-- Eleventy v2.0.1 (upgrade needed)
-- Plain CSS (Tailwind migration needed)
-- Supabase submissions (Sanity migration needed)
+### DON'T
 
----
+- Don't create custom authentication — use Sanity Studio native auth
+- Don't build serverless functions — use Make webhook for form handling
+- Don't hardcode Sanity credentials — use environment variables
+- Don't let Sanity fetch failures crash the build — graceful degradation
+- Don't use truthy checks on arrays in Nunjucks (arrays are always truthy)
 
-## Critical Implementation Rules
+## Technology Stack
 
-### File & Naming Conventions
+| Layer | Technology | Version |
+|-------|------------|---------|
+| SSG | Eleventy | 3.1.2 |
+| Templating | Nunjucks | — |
+| Styling | Tailwind CSS | 3.4.18 |
+| CMS | Sanity | v3 |
+| Forms | Make webhook | — |
+| CRM | Airtable | Free tier |
+| Hosting | GitHub Pages | — |
 
-- **All files:** kebab-case (`style-card.njk`, `submit-form.js`)
-- **Exception:** Sanity schemas use camelCase (`designStyle.js`)
-- **Data files:** Plural names matching content type (`designStyles.js`)
-- **Test files:** Same name + `.spec.js` (`gallery.spec.js`)
+## Directory Structure
 
-### Nunjucks Template Rules
+```
+src/
+├── _data/           # Sanity data fetchers
+├── _includes/       # Layouts, components, macros
+├── pages/           # Page templates
+├── scripts/         # Client-side JS (minimal)
+└── styles/          # Tailwind CSS entry
 
-- Use `{% extends "layouts/base.njk" %}` for page layouts
-- Use `{% include "components/..." %}` for simple partials
-- Use macros for parameterized components:
-  ```nunjucks
-  {% from "components/button.njk" import button %}
-  {{ button("Label", url, "primary") }}
-  ```
-- Never create standalone component pages
-
-### Sanity Data Fetching Rules
-
-- **ALWAYS** use shared client from `src/lib/sanity-client.js`
-- **NEVER** instantiate new Sanity clients
-- **ALWAYS** project specific fields in GROQ (no wildcards):
-  ```javascript
-  // GOOD
-  *[_type == "designStyle"] { _id, title, slug, demoUrl }
-
-  // BAD
-  *[_type == "designStyle"]
-  ```
-- Use GROQ dereferencing for assets: `"imageUrl": image.asset->url`
-
-### JavaScript Rules
-
-- Use object literal module pattern (no classes):
-  ```javascript
-  const ModuleName = {
-    STORAGE_KEY: 'key-name',
-    init() { /* ... */ },
-  };
-  document.addEventListener('DOMContentLoaded', () => ModuleName.init());
-  ```
-- **ALWAYS** use `data-*` attributes for DOM hooks (never classes/IDs for JS)
-- Wrap fetch calls in try/catch with user-friendly error messages
-- Constants in UPPER_SNAKE_CASE, methods in camelCase
-
-### Tailwind CSS Rules
-
-- **Class ordering:** Layout → Spacing → Sizing → Typography → Colors → Effects → States
-- Extract to `@layer components` when used 3+ times
-- **ALWAYS** include focus states on interactive elements:
-  ```html
-  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-  ```
-
-### Accessibility Rules (WCAG AA)
-
-- All interactive elements MUST have visible focus states
-- Form errors MUST use `aria-invalid="true"` and `aria-describedby`
-- Status messages MUST use `role="alert"`
-- All images MUST have meaningful alt text
-
-### Form Handling Rules
-
-- Client-side validation before submit
-- Disable submit button during submission, show "Submitting..."
-- On success: Show green `role="alert"` message, reset form
-- On error: Show red `role="alert"` message, preserve user input
-- **NEVER** clear user input on error
-
-### Performance Rules
-
-- CSS bundle MUST be <50KB
-- Lighthouse scores MUST be ≥90
-- All integrations MUST fail gracefully (no blocking errors)
-- GA4 ONLY loads after explicit user consent
-
----
-
-## Anti-Patterns to Avoid
-
-### Code Anti-Patterns
-
-- **NEVER** use class names or IDs for JavaScript DOM selection
-- **NEVER** fetch all fields in GROQ queries without projection
-- **NEVER** instantiate new Sanity clients (use shared instance)
-- **NEVER** load GA4 without checking consent first
-- **NEVER** clear form input on validation/submission errors
-- **NEVER** create components without focus states
-- **NEVER** use inline styles (use Tailwind utilities)
-
-### Architecture Anti-Patterns
-
-- **NEVER** put JS logic in Nunjucks templates
-- **NEVER** make runtime API calls that should be build-time
-- **NEVER** expose Sanity tokens client-side
-- **NEVER** skip error handling for fetch/async operations
-- **NEVER** block page rendering on failed integrations
-
-### Testing Anti-Patterns
-
-- **NEVER** test implementation details (test behavior)
-- **NEVER** skip accessibility assertions in E2E tests
-- **NEVER** hardcode test data that could change
-
----
-
-## Testing Rules
-
-### Test Organization
-
-- Tests live in `/tests/` directory
-- E2E tests in `/tests/e2e/`
-- Fixtures in `/tests/fixtures/`
-- Name pattern: `{feature}.spec.js`
-
-### Required Test Coverage
-
-- Homepage loads and displays content
-- Gallery filtering and navigation works
-- Submission form validates correctly
-- Cookie consent banner functions properly
-- All pages pass accessibility checks
-
-### Playwright Patterns
-
-```javascript
-// Always use data-testid for test selectors
-await page.locator('[data-testid="submit-button"]').click();
-
-// Always check accessibility
-await expect(page).toHaveNoViolations();
-
-// Always test error states
-await expect(page.locator('[role="alert"]')).toBeVisible();
+studio/              # Sanity Studio (separate)
+└── schemas/         # Document type definitions
 ```
 
----
+## Sanity Schema Conventions
 
-## Migration Awareness
+```javascript
+// Document types: camelCase
+name: 'designStyle'
+name: 'gallerySubmission'
 
-**IMPORTANT:** Current codebase differs from target architecture:
+// Fields: camelCase
+{ name: 'submitterName', type: 'string' }
+{ name: 'accentColor', type: 'string' }
 
-| Current | Target | Status |
-|---------|--------|--------|
-| `src/js/` | `src/assets/js/` | Migration needed |
-| `src/css/` | `src/assets/css/` | Migration needed |
-| `partials/` | `components/` | Migration needed |
-| Supabase | Sanity mutations | Migration needed |
-| Plain CSS | Tailwind CSS v4 | Migration needed |
-| Eleventy v2 | Eleventy v3.1.2 | Migration needed |
+// Booleans: prefix with is/has
+{ name: 'isFeatured', type: 'boolean' }
+{ name: 'hasPublicDisplayConsent', type: 'boolean' }
 
-**AI agents should:**
-1. Check which structure exists before creating files
-2. Follow target architecture for NEW files
-3. Note migration tasks when touching existing files
+// Status: lowercase enum
+status: 'pending' | 'approved' | 'rejected'
+```
 
----
+## Data Fetching Pattern
+
+```javascript
+// src/_data/designStyles.js
+import Fetch from "@11ty/eleventy-fetch";
+
+const PROJECT_ID = process.env.SANITY_PROJECT_ID;
+const DATASET = process.env.SANITY_DATASET || 'production';
+const QUERY = encodeURIComponent('*[_type == "designStyle"]');
+const URL = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
+
+export default async function() {
+  try {
+    const data = await Fetch(URL, { duration: "1h", type: "json" });
+    return data.result;
+  } catch (e) {
+    console.error("Failed to fetch designStyles:", e.message);
+    return []; // Graceful fallback
+  }
+}
+```
+
+## Template Pattern
+
+```nunjucks
+{# Correct: explicit length check #}
+{% if designStyles.length %}
+  {% for style in designStyles %}
+    {% include "components/card.njk" %}
+  {% endfor %}
+{% else %}
+  <p class="text-secondary">No styles available yet.</p>
+{% endif %}
+```
+
+## Form Submission Flow
+
+```
+User submits form (src/pages/submit.njk)
+       ↓
+POST to Make webhook (MAKE_WEBHOOK_URL env var)
+       ↓
+Make scenario:
+  1. Create Sanity document (status: pending)
+  2. Create Airtable record
+  3. Fire Discord webhook
+```
+
+## Environment Variables
+
+```bash
+SANITY_PROJECT_ID=xxx        # Sanity project ID
+SANITY_DATASET=production    # Dataset name
+SANITY_API_TOKEN=sk-xxx      # Read token (build only)
+MAKE_WEBHOOK_URL=https://... # Form submission endpoint
+```
+
+## Accessibility Requirements
+
+- WCAG 2.1 Level AA compliance
+- Skip links on all pages
+- Alt text for all images
+- 4.5:1 contrast ratio minimum
+- Keyboard navigable
+- Focus visible indicators
+
+## Performance Targets
+
+- Lighthouse > 90
+- FCP < 1.5s
+- LCP < 2.5s
+- CLS < 0.1
+- CSS < 50KB
+
+## Testing
+
+- E2E tests in `tests/e2e/` using Playwright
+- Test gallery rendering, form submission, navigation
+- Validate accessibility with axe-core
 
 ## Reference Documents
 
-- **Architecture:** `docs/architecture.md`
-- **PRD:** `docs/prd.md`
-- **Sanity Schemas:** `studio/schemas/`
-
----
-
-_Last updated: 2025-12-05_
+- `docs/architecture.md` — Full architectural decisions
+- `docs/prd.md` — Product requirements (FR1-50, NFR1-38)
+- `docs/swiss-lineage.md` — UI specifications and design system
