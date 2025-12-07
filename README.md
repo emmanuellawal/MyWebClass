@@ -15,7 +15,7 @@ MyWebClass.org showcases iconic design movements (Swiss International Style, Bau
 - **Templating**: Nunjucks
 - **Styling**: Tailwind CSS v4
 - **CMS**: Sanity (headless CMS)
-- **Hosting**: Netlify/Vercel
+- **Hosting**: GitHub Pages
 - **Design System**: Swiss International Style
 
 ## Project Structure

@@ -1,6 +1,6 @@
 # Story 1.4: Configure GitHub Actions Sanity Webhook Rebuild
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -376,17 +376,16 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
    - Added `lighthouserc.js` for Lighthouse CI configuration
    - Fixed test command glob pattern for CI compatibility
    - Added environment setting for GitHub Pages deployment in ci.yml
-   - Added GITHUB_ACTIONS env variable documentation to `.env`
+   - Added `GITHUB_ACTIONS: true` env var to sanity-rebuild.yml for consistency
 
 ### File List
 
 - `.github/workflows/sanity-rebuild.yml` (NEW)
 - `.github/workflows/ci.yml` (MODIFIED - fixed paths, added environment)
 - `.eleventy.js` (MODIFIED - added pathPrefix)
-- `.env` (MODIFIED - added GITHUB_ACTIONS documentation)
 - `lighthouserc.js` (NEW - lighthouse CI config for public directory)
 - `package.json` (MODIFIED - fixed test command)
-- `README.md` (MODIFIED - added workflow badges)
+- `README.md` (MODIFIED - added workflow badges, updated hosting info)
 - `src/_includes/layouts/base.njk` (MODIFIED - url filter for assets)
 - `src/_includes/components/navigation.njk` (MODIFIED - url filter for links)
 - `src/_includes/components/footer.njk` (MODIFIED - url filter for links)
@@ -398,9 +397,16 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - `src/pages/legal/privacy.njk` (MODIFIED - url filter for links)
 - `docs/sprint-artifacts/sprint-status.yaml` (MODIFIED - status updated)
 - `docs/sprint-artifacts/1-4-configure-github-actions-sanity-webhook-rebuild.md` (MODIFIED)
+- `docs/sprint-artifacts/validation-report-1-4-20251206.md` (NEW - validation report)
+
+### Review Follow-ups
+
+- [ ] [AI-Review][MEDIUM] Add unit tests for pathPrefix configuration in `.eleventy.js:27` - currently no tests validate GitHub Pages path behavior
+- [ ] [AI-Review][LOW] Consider adding workflow validation tests (YAML lint, action version checks)
 
 ### Change Log
 
+- 2025-12-06: Code review applied fixes (M1, M3, L1, L2) - removed untracked .env from File List, added validation report, synced env vars
 - 2025-12-06: Story implementation complete - all tasks finished, CI/CD pipeline fully passing
 
 ---
