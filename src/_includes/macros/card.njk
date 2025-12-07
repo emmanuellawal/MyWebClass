@@ -2,7 +2,7 @@
 <article class="card card-hover cursor-pointer group">
   <div
     class="h-48 flex items-center justify-center text-6xl"
-    style="background-color: {{ style.accentColor }}20;"
+    style="background-color: {{ style.accentColor or '#E53935' }}20;"
   >
     {{ style.thumbnail or '🎨' }}
   </div>
@@ -12,9 +12,11 @@
       <h3 class="text-h4 group-hover:text-neutral-600 transition-colors">
         {{ style.title }}
       </h3>
+      {% if style.era %}
       <span class="text-caption text-neutral-400 bg-neutral-100 px-2 py-1 whitespace-nowrap ml-2">
         {{ style.era }}
       </span>
+      {% endif %}
     </div>
     <p class="text-body-sm text-neutral-500 mb-4">
       {{ style.description }}
@@ -23,7 +25,7 @@
       <span class="text-sm font-medium text-swiss-red">View Demo →</span>
       <div
         class="w-4 h-4"
-        style="background-color: {{ style.accentColor }};"
+        style="background-color: {{ style.accentColor or '#E53935' }};"
       ></div>
     </div>
   </div>

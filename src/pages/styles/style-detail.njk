@@ -3,7 +3,7 @@ pagination:
   data: designStyles
   size: 1
   alias: style
-permalink: "/styles/{{ style.slug }}/"
+permalink: "/styles/{{ style.slug.current or style.slug }}/"
 layout: layouts/base.njk
 ---
 
@@ -18,12 +18,12 @@ layout: layouts/base.njk
     </a>
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
       <div>
-        <span class="text-overline text-neutral-400">{{ style.era }}</span>
+        <span class="text-overline text-neutral-400">{{ style.era or 'Design Movement' }}</span>
         <h1 class="text-h1 mt-2">{{ style.title }}</h1>
       </div>
       <div
         class="w-16 h-16 flex-shrink-0"
-        style="background-color: {{ style.accentColor }};"
+        style="background-color: {{ style.accentColor or '#E53935' }};"
       ></div>
     </div>
   </div>
@@ -35,14 +35,16 @@ layout: layouts/base.njk
     <h2 class="text-overline text-neutral-400 mb-6">Live Demo</h2>
     <div
       class="h-96 border-2 border-black flex items-center justify-center"
-      style="background-color: {{ style.accentColor }}10;"
+      style="background-color: {{ style.accentColor or '#E53935' }}10;"
     >
       <div class="text-center">
-        <span class="text-8xl block mb-4">{{ style.thumbnail }}</span>
+        <span class="text-8xl block mb-4">{{ style.thumbnail or '🎨' }}</span>
         <p class="text-neutral-500 mb-4">Interactive {{ style.title }} Demo</p>
+        {% if style.demoUrl %}
         <a href="{{ style.demoUrl }}" target="_blank" rel="noopener" class="btn btn-primary text-sm">
           Open Full Demo ↗
         </a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -55,9 +57,26 @@ layout: layouts/base.njk
       {# Main Content #}
       <div class="lg:col-span-8">
         <h2 class="text-h2 mb-6">Origins & History</h2>
-        <p class="text-lg text-neutral-600 leading-relaxed mb-8">
-          {{ style.origin }}
-        </p>
+        <div class="text-lg text-neutral-600 leading-relaxed mb-8">
+          {# Handle Sanity Portable Text (block content) vs plain string #}
+          {% if style.history %}
+            {% if style.history[0] and style.history[0].children %}
+              {# Portable Text - extract text from blocks #}
+              {% for block in style.history %}
+                {% if block.children %}
+                  <p class="mb-4">{% for span in block.children %}{{ span.text }}{% endfor %}</p>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {# Plain string #}
+              <p>{{ style.history }}</p>
+            {% endif %}
+          {% elif style.origin %}
+            <p>{{ style.origin }}</p>
+          {% else %}
+            <p>History coming soon.</p>
+          {% endif %}
+        </div>
 
         <h2 class="text-h2 mb-6">Key Characteristics</h2>
         <ul class="space-y-3 mb-8">
@@ -65,7 +84,7 @@ layout: layouts/base.njk
           <li class="flex items-start gap-3">
             <div
               class="w-2 h-2 mt-2 flex-shrink-0"
-              style="background-color: {{ style.accentColor }};"
+              style="background-color: {{ style.accentColor or '#E53935' }};"
             ></div>
             <span class="text-neutral-600">{{ char }}</span>
           </li>
@@ -90,10 +109,11 @@ layout: layouts/base.njk
             <span class="text-caption text-neutral-400 uppercase tracking-wider">Color Palette</span>
             <div class="flex gap-2 mt-2 flex-wrap">
               {% for color in style.colorPalette %}
+              {% set colorHex = color.hex or color %}
               <div
-                class="w-8 h-8 {% if color == '#FFFFFF' %}border border-black{% endif %}"
-                style="background-color: {{ color }};"
-                title="{{ color }}"
+                class="w-8 h-8 {% if colorHex == '#FFFFFF' %}border border-black{% endif %}"
+                style="background-color: {{ colorHex }};"
+                title="{{ colorHex }}"
               ></div>
               {% endfor %}
             </div>
@@ -101,14 +121,16 @@ layout: layouts/base.njk
 
           <div class="mb-6">
             <span class="text-caption text-neutral-400 uppercase tracking-wider">Typography</span>
-            <p class="mt-2 font-bold">{{ style.typography }}</p>
+            <p class="mt-2 font-bold">{{ style.typography.primaryFont or style.typography or 'Sans-serif' }}</p>
             <p class="text-sm text-neutral-500">Sans-serif, clean</p>
           </div>
 
+          {% if style.gridSystem %}
           <div class="mb-6">
             <span class="text-caption text-neutral-400 uppercase tracking-wider">Grid</span>
             <p class="mt-2 text-sm text-neutral-600">{{ style.gridSystem }}</p>
           </div>
+          {% endif %}
 
           <a href="#" class="btn btn-primary w-full text-sm text-center block">
             Download Style Guide

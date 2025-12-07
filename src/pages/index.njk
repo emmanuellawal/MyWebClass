@@ -79,11 +79,9 @@ permalink: /
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for style in designStyles %}
-        {% if style.status == 'approved' %}
-        <a href="/styles/{{ style.slug }}/" class="block">
+        <a href="/styles/{{ style.slug.current or style.slug }}/" class="block">
           {{ cards.galleryCard(style) }}
         </a>
-        {% endif %}
       {% endfor %}
     </div>
   </div>
