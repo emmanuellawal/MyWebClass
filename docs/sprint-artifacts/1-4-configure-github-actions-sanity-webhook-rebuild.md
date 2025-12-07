@@ -336,6 +336,9 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - Workflow run #19997513617 succeeded after enabling GitHub Pages
 - Workflow run #19997548816 succeeded with pathPrefix fix
 - Workflow run #19997589692 succeeded with all link fixes
+- CI run #19997619576 failed - test glob pattern issue
+- CI run #19997677925 failed - deploy missing environment
+- CI run #19997711040 **SUCCESS** - all jobs passing (lint, build, test, lighthouse, deploy)
 
 ### Completion Notes List
 
@@ -349,7 +352,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 2. **Task 2 Complete:** Verified workflow compatibility:
    - ci.yml triggers on push/PR (no conflict with dispatch triggers)
-   - ci.yml has existing bug with `_site/` path (out of scope)
+   - Fixed ci.yml bug with `_site/` path → now uses `public/`
    - sanity-rebuild.yml correctly uses `public/` output directory
 
 3. **Tasks 3-4 Complete:** Documentation already exists in Dev Notes section for:
@@ -366,18 +369,23 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 5. **Task 6 Complete:** Added workflow status badges to README.md
 
-6. **Additional Fix:** Added pathPrefix configuration for GitHub Pages:
-   - Updated `.eleventy.js` with dynamic pathPrefix
+6. **Additional Fixes Applied:**
+   - Added pathPrefix configuration in `.eleventy.js` for GitHub Pages
    - Updated all templates to use `url` filter for internal links
+   - Fixed ci.yml output paths from `_site/` to `public/`
+   - Added `lighthouserc.js` for Lighthouse CI configuration
+   - Fixed test command glob pattern for CI compatibility
+   - Added environment setting for GitHub Pages deployment in ci.yml
    - Added GITHUB_ACTIONS env variable documentation to `.env`
 
 ### File List
 
 - `.github/workflows/sanity-rebuild.yml` (NEW)
-- `.github/workflows/ci.yml` (MODIFIED - fixed output path from _site to public)
+- `.github/workflows/ci.yml` (MODIFIED - fixed paths, added environment)
 - `.eleventy.js` (MODIFIED - added pathPrefix)
 - `.env` (MODIFIED - added GITHUB_ACTIONS documentation)
 - `lighthouserc.js` (NEW - lighthouse CI config for public directory)
+- `package.json` (MODIFIED - fixed test command)
 - `README.md` (MODIFIED - added workflow badges)
 - `src/_includes/layouts/base.njk` (MODIFIED - url filter for assets)
 - `src/_includes/components/navigation.njk` (MODIFIED - url filter for links)
@@ -390,6 +398,10 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - `src/pages/legal/privacy.njk` (MODIFIED - url filter for links)
 - `docs/sprint-artifacts/sprint-status.yaml` (MODIFIED - status updated)
 - `docs/sprint-artifacts/1-4-configure-github-actions-sanity-webhook-rebuild.md` (MODIFIED)
+
+### Change Log
+
+- 2025-12-06: Story implementation complete - all tasks finished, CI/CD pipeline fully passing
 
 ---
 
