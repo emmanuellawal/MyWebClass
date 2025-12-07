@@ -1,3 +1,6 @@
-// Schema types will be added in Story 1.2
-// Export empty array for clean project initialization
-export const schemaTypes = []
+import designStyle from './designStyle'
+import gallerySubmission from './gallerySubmission'
+import article from './article'
+import author from './author'
+
+export const schemaTypes = [designStyle, gallerySubmission, article, author]
