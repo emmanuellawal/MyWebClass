@@ -1,14 +1,14 @@
 [tool.semantic_release]
-# Version source - read/write from package.json
+# Version source - use tags for versioning
 version_toml = []
 version_variables = []
 version_source = "tag"
 
-# Commit parser - Angular/Conventional Commits
-commit_parser = "angular"
+# Commit parser - Conventional Commits (renamed from angular in v10)
+commit_parser = "conventional"
 
 [tool.semantic_release.commit_parser_options]
-# Angular commit types that trigger releases
+# Conventional commit types that trigger releases
 allowed_tags = [
     "build",
     "chore",
@@ -34,27 +34,14 @@ type = "github"
 
 [tool.semantic_release.changelog]
 # Changelog configuration
-changelog_file = "CHANGELOG.md"
 exclude_commit_patterns = [
     "^chore\\(release\\):",
     "^ci:",
     "^Merge ",
 ]
 
-[tool.semantic_release.changelog.environment]
-# Jinja2 template settings
-autoescape = "html"
-block_start_string = "{%"
-block_end_string = "%}"
-variable_start_string = "{{"
-variable_end_string = "}}"
-comment_start_string = "{#"
-comment_end_string = "#}"
-trim_blocks = false
-lstrip_blocks = false
-newline_sequence = "\n"
-keep_trailing_newline = false
-extensions = []
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"
 
 [tool.semantic_release.publish]
 # Disable PyPI publishing (not a Python package)

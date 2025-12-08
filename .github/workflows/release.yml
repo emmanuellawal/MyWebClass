@@ -65,10 +65,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           git_committer_name: "github-actions[bot]"
           git_committer_email: "github-actions[bot]@users.noreply.github.com"
-          ssh_public_signing_key: ""
-          ssh_private_signing_key: ""
-          # Root directory containing pyproject.toml
-          root_options: "-vv"
+          verbosity: 2
 
       - name: Publish release artifacts
         if: steps.release.outputs.released == 'true'
