@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.2.0 (2025-12-08)
+
+### Features
+
+- **detail**: Implement style detail pages with hero, gallery, and educational content
+  ([`5c95fc1`](https://github.com/gsinghjay/MyWebClass/commit/5c95fc1875504719b92c8c6ab8408ea6cde12503))
+
+
 ## v1.1.0 (2025-12-08)
 
 ### Features
