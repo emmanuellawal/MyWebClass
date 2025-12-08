@@ -1,10 +1,14 @@
+{# Sanity CDN config - hardcoded since macros don't have access to global data #}
+{% set sanityProjectId = "gc7vlywa" %}
+{% set sanityDataset = "production" %}
+
 {% macro galleryCard(style) %}
 <article class="card card-hover cursor-pointer group">
   {% if style.heroImage and style.heroImage.asset and style.heroImage.asset._ref %}
     {# Render Sanity CDN image with optimization #}
     <div class="h-48 overflow-hidden">
       <img
-        src="https://cdn.sanity.io/images/{{ sanityConfig.projectId }}/{{ sanityConfig.dataset }}/{{ style.heroImage.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=400&fit=crop&auto=format"
+        src="https://cdn.sanity.io/images/{{ sanityProjectId }}/{{ sanityDataset }}/{{ style.heroImage.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=400&fit=crop&auto=format"
         alt="{{ style.heroImage.alt or style.title }}"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         loading="lazy"
@@ -50,7 +54,7 @@
   {% if submission.screenshot and submission.screenshot.asset and submission.screenshot.asset._ref %}
     <div class="h-64 overflow-hidden relative">
       <img
-        src="https://cdn.sanity.io/images/{{ sanityConfig.projectId }}/{{ sanityConfig.dataset }}/{{ submission.screenshot.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=600&fit=crop&auto=format"
+        src="https://cdn.sanity.io/images/{{ sanityProjectId }}/{{ sanityDataset }}/{{ submission.screenshot.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=600&fit=crop&auto=format"
         alt="{{ submission.screenshot.alt or ((submission.styleRef.title if submission.styleRef else 'Design') + ' demo by ' + (submission.submitterName or 'Anonymous')) }}"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         loading="lazy"
@@ -103,7 +107,7 @@
   {% if submission.screenshot and submission.screenshot.asset and submission.screenshot.asset._ref %}
     <div class="h-48 overflow-hidden relative">
       <img
-        src="https://cdn.sanity.io/images/{{ sanityConfig.projectId }}/{{ sanityConfig.dataset }}/{{ submission.screenshot.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=400&fit=crop&auto=format"
+        src="https://cdn.sanity.io/images/{{ sanityProjectId }}/{{ sanityDataset }}/{{ submission.screenshot.asset._ref | replace('image-', '') | replace('-jpg', '.jpg') | replace('-jpeg', '.jpeg') | replace('-png', '.png') | replace('-webp', '.webp') | replace('-gif', '.gif') }}?w=400&fit=crop&auto=format"
         alt="{{ submission.screenshot.alt or ((submission.styleRef.title if submission.styleRef else 'Design') + ' demo by ' + (submission.submitterName or 'Anonymous')) }}"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         loading="lazy"
