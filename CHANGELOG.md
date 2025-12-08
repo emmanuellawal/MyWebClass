@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.4.0 (2025-12-08)
+
+### Features
+
+- **gallery**: Add Featured Themes section with curated submissions
+  ([`9b336a8`](https://github.com/gsinghjay/MyWebClass/commit/9b336a805747b8471f0915d4bf29af0c7bf71b0b))
+
+
 ## v1.3.0 (2025-12-08)
 
 ### Bug Fixes
