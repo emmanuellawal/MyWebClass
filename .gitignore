@@ -33,3 +33,4 @@ studio/.sanity/
 # Logs
 *.log
 npm-debug.log*
+studio/schema.json

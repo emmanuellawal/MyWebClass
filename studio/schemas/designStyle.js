@@ -118,6 +118,40 @@ export default defineType({
         ]
       }],
       description: 'Additional images showcasing this style'
+    }),
+    // Template-required fields (1.5 Story)
+    defineField({
+      name: 'accentColor',
+      title: 'Accent Color',
+      type: 'string',
+      description: 'Hex color for this style (e.g., #E53935)',
+      validation: Rule => Rule.regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
+        name: 'hex color'
+      }).error('Must be a valid hex color')
+    }),
+    defineField({
+      name: 'era',
+      title: 'Era',
+      type: 'string',
+      description: 'Historical period (e.g., "1950s-1970s")'
+    }),
+    defineField({
+      name: 'thumbnail',
+      title: 'Thumbnail Emoji',
+      type: 'string',
+      description: 'Emoji placeholder if no hero image (e.g., "🇨🇭")'
+    }),
+    defineField({
+      name: 'demoUrl',
+      title: 'Demo URL',
+      type: 'url',
+      description: 'Link to interactive demo (optional)'
+    }),
+    defineField({
+      name: 'gridSystem',
+      title: 'Grid System',
+      type: 'string',
+      description: 'Grid layout description (optional)'
     })
   ],
   preview: {
