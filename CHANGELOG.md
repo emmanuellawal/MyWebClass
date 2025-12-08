@@ -1,33 +1,22 @@
-# Changelog
+# CHANGELOG
 
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## v1.0.2 (2025-12-08)
 
-## [Unreleased]
+### Bug Fixes
 
-### Added
-- Initial project setup with Eleventy 3.x and Sanity CMS
-- Design styles gallery with 34 design movements
-- Sanity Studio for content management
-- GitHub Actions CI/CD pipeline
-- Lighthouse performance testing
-- Playwright end-to-end testing
+- **ci**: Set changelog mode to init for full history generation
+  ([`a01b988`](https://github.com/gsinghjay/MyWebClass/commit/a01b988e20737acb5cd28c6d2ce2687c181a9d59))
 
-### Epic 1: Foundation & Sanity CMS Integration (Complete)
-- Story 1.1: Initialize Sanity Studio Project
-- Story 1.2: Create Sanity Content Schemas
-- Story 1.3: Set Up Eleventy Data Fetching Layer
-- Story 1.4: Configure GitHub Actions Sanity Webhook Rebuild
-- Story 1.5: Migrate Existing Content to Sanity
 
-<!--
-## [1.0.0] - YYYY-MM-DD
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
--->
+## v1.0.1 (2025-12-08)
+
+### Bug Fixes
+
+- **ci**: Enable changelog commit and push in semantic release
+  ([`90f0a34`](https://github.com/gsinghjay/MyWebClass/commit/90f0a345c3169e798ade059842e4cef0661d2829))
+
+
+## v1.0.0 (2025-12-08)
+
+- Initial Release
