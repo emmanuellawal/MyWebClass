@@ -108,7 +108,8 @@ Each gallery card should display:
   - [x] 2.5: Create "Flat Design" document (accentColor: "#00BCD4", era: "2012-present")
   - [x] 2.6: Create "Minimalism" document (accentColor: "#9E9E9E", era: "1960s-present")
   - [x] 2.7: Verify slugs are generated correctly for each document
-  - [x] 2.8: **BONUS** Added 12 additional design styles (total 17 styles)
+  - [x] 2.8: **BONUS** Added 29 additional design styles (total 34 styles)
+  - [x] 2.9: **BONUS** Added 2 custom styles with live demo URLs (Deconstructivist Grunge, Swiss Metro)
 
 - [x] Task 3: Upload images to Sanity (AC: #4)
   - [x] 3.1: Prepare hero images for each design style (or skip for MVP with emoji fallback)
@@ -119,14 +120,14 @@ Each gallery card should display:
 
 - [x] Task 4: Verify Eleventy data fetching works with content (AC: #5)
   - [x] 4.1: Run local build with `npm run build`
-  - [x] 4.2: Verify `designStyles.mjs` fetches all documents (17 styles)
-  - [x] 4.3: Check console for `[Sanity] Fetched 17 design styles`
+  - [x] 4.2: Verify `designStyles.mjs` fetches all documents (34 styles)
+  - [x] 4.3: Check console for `[Sanity] Fetched 34 design styles`
   - [x] 4.4: Verify no empty array fallback triggered
   - [x] 4.5: Log fetched data to verify accentColor and era fields present
 
 - [x] Task 5: Test gallery display with live Sanity data (AC: #3)
   - [x] 5.1: Start local dev server with `npm run dev`
-  - [x] 5.2: Verify gallery page shows all 17 styles
+  - [x] 5.2: Verify gallery page shows all 34 styles
   - [x] 5.3: **Verify each card has UNIQUE accent color** (not all red)
   - [x] 5.4: **Verify era badges display** (e.g., "1950s-1970s")
   - [x] 5.5: Verify detail pages render correctly with history content
@@ -455,16 +456,19 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 - Schema extract verified via `npx sanity schema extract`
 - All 9 tests pass (`npm run test`)
-- Build output: `[Sanity] Fetched 17 design styles`
-- CI/CD Pipeline run 20017830585: SUCCESS
+- Build output: `[Sanity] Fetched 34 design styles`
+- CI/CD Pipeline runs: SUCCESS (multiple commits)
 
 ### Completion Notes List
 
 - **Schema Update**: Added 5 new fields (accentColor, era, thumbnail, demoUrl, gridSystem) to studio/schemas/designStyle.js
-- **Content Created**: 17 design style documents imported via NDJSON files
+- **Content Created**: 34 design style documents imported via NDJSON files
   - Original 5: Swiss International Style, Bauhaus, Brutalist, Flat Design, Minimalism
-  - Added 12 more: Grunge, Metro Design, Material Design, Art Deco, Memphis Design, Neomorphism, Glassmorphism, Skeuomorphism, Cyberpunk, Corporate Memphis, Vaporwave, Y2K Aesthetic
+  - Batch 1 (+12): Grunge, Metro Design, Material Design, Art Deco, Memphis Design, Neomorphism, Glassmorphism, Skeuomorphism, Cyberpunk, Corporate Memphis, Vaporwave, Y2K Aesthetic
+  - Jay's Custom (+2): Deconstructivist Grunge (with live demo), Swiss Metro Transformation (with live demo)
+  - Batch 2 (+15): Art Nouveau, De Stijl, Constructivism, Pop Art, Psychedelic, Scandinavian Design, Futurism, Gothic Dark, Duotone, Risograph, New Wave, Editorial Design, Wabi-Sabi, Isometric Design, Retrofuturism
 - **Each style includes**: Title, slug, description, accentColor, era, thumbnail, gridSystem, history (rich text), characteristics, colorPalette, typography
+- **Live Demos**: 2 styles have demoUrl linking to Jay's GitHub Pages projects
 - **Gallery verified**: Each card displays unique accent color and era badge
 - **Tests**: All 9 tests pass
 - **Deployment**: CI/CD Pipeline passed, content live in Sanity
@@ -479,11 +483,13 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 **Created:**
 - studio/design-styles-import.ndjson - Initial 5 design styles content
 - studio/design-styles-additional.ndjson - Additional 12 design styles content
+- studio/design-styles-jay.ndjson - Jay's 2 custom design styles with live demos
+- studio/design-styles-batch2.ndjson - 15 more design styles
 - docs/sprint-artifacts/1-5-migrate-existing-content-to-sanity.md - Story file
 - docs/sprint-artifacts/validation-report-1-5-20251206.md - Validation report
 
 **Sanity Documents Created:**
-- 17 designStyle documents in production dataset
+- 34 designStyle documents in production dataset
 
 ---
 
