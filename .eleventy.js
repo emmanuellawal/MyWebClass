@@ -9,6 +9,34 @@ module.exports = function(eleventyConfig) {
     return array.slice(0, limit);
   });
 
+  // Date formatting filter for articles
+  eleventyConfig.addFilter("date", function(dateString, format) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const months = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+    // Support "MMMM d, yyyy" format
+    if (format === "MMMM d, yyyy") {
+      return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    }
+    // Default ISO format
+    return date.toISOString().split('T')[0];
+  });
+
+  // Extract plain text from first block for excerpt
+  eleventyConfig.addFilter("extractExcerpt", function(body, maxLength = 150) {
+    if (!body || !Array.isArray(body)) return "";
+    for (const block of body) {
+      if (block._type === 'block' && block.children) {
+        const text = block.children.map(span => span.text || '').join('');
+        if (text) {
+          return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+      }
+    }
+    return "";
+  });
+
   eleventyConfig.addFilter("filterByStatus", function(array, status) {
     return array.filter(item => item.status === status);
   });
@@ -24,7 +52,9 @@ module.exports = function(eleventyConfig) {
       includes: "_includes",
       data: "_data"
     },
-    pathPrefix: process.env.GITHUB_ACTIONS ? "/MyWebClass/" : "/",
+    // Use DEPLOY_PATH_PREFIX for GitHub Pages deployment only
+    // This avoids pathPrefix issues during CI testing where GITHUB_ACTIONS is auto-set
+    pathPrefix: process.env.DEPLOY_PATH_PREFIX || "/",
     templateFormats: ["njk", "md", "html"],
     htmlTemplateEngine: "njk",
     markdownTemplateEngine: "njk"
