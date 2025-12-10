@@ -1,6 +1,6 @@
 # Story 2.6: Responsive Mobile Experience
 
-Status: Ready for Review
+Status: Done
 
 ## Story
 
