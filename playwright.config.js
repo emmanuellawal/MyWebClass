@@ -28,7 +28,9 @@ export default defineConfig({
 
   /* Run local dev server before starting tests */
   webServer: {
-    command: process.env.CI ? 'npx @11ty/eleventy --serve --port=8080' : 'npm run build && npx @11ty/eleventy --serve --port=8080',
+    command: process.env.CI 
+      ? 'npx http-server public -p 8080 -c-1'  // Just serve static files in CI
+      : 'npm run build && npx @11ty/eleventy --serve --port=8080',  // Build and watch locally
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
