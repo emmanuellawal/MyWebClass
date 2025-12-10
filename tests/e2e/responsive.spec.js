@@ -4,21 +4,22 @@ import { test, expect } from '@playwright/test';
 /**
  * Responsive Layout E2E Tests
  * Story 2.6: Responsive Mobile Experience
+ *
+ * Note: Each test explicitly sets viewport before navigation to ensure
+ * consistent behavior across local and CI environments.
  */
 
 test.describe('Responsive Layout', () => {
   test.describe('Mobile (375px)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 375, height: 667 });
-    });
-
     test('should show hamburger menu', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       await expect(page.locator('#mobile-menu-button')).toBeVisible();
       await expect(page.locator('.hidden.md\\:flex')).not.toBeVisible();
     });
 
     test('should open mobile menu on click', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       await page.click('#mobile-menu-button');
       await expect(page.locator('#mobile-menu')).toBeVisible();
@@ -26,6 +27,7 @@ test.describe('Responsive Layout', () => {
     });
 
     test('should close mobile menu on second click', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       await page.click('#mobile-menu-button');
       await expect(page.locator('#mobile-menu')).toBeVisible();
@@ -35,6 +37,7 @@ test.describe('Responsive Layout', () => {
     });
 
     test('should close mobile menu on Escape key', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       await page.click('#mobile-menu-button');
       await expect(page.locator('#mobile-menu')).toBeVisible();
@@ -43,6 +46,7 @@ test.describe('Responsive Layout', () => {
     });
 
     test('should show single column gallery', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       const cards = await page.locator('#gallery .gallery-card').all();
       if (cards.length > 1) {
@@ -54,18 +58,21 @@ test.describe('Responsive Layout', () => {
     });
 
     test('should have scrollable filter buttons', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       const filterNav = page.locator('#filter-buttons');
       await expect(filterNav).toHaveCSS('overflow-x', 'auto');
     });
 
     test('should show 2x2 stats grid', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       const statsGrid = page.locator('section.border-b-2 .container-custom > .grid');
       await expect(statsGrid).toHaveClass(/grid-cols-2/);
     });
 
     test('hero CTA buttons should stack vertically', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       const ctaContainer = page.locator('section.bg-black .flex.flex-col');
       await expect(ctaContainer).toBeVisible();
@@ -81,17 +88,15 @@ test.describe('Responsive Layout', () => {
   });
 
   test.describe('Tablet (768px)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 768, height: 1024 });
-    });
-
     test('should show desktop navigation', async ({ page }) => {
+      await page.setViewportSize({ width: 768, height: 1024 });
       await page.goto('/');
       await expect(page.locator('#mobile-menu-button')).not.toBeVisible();
       await expect(page.locator('.hidden.md\\:flex')).toBeVisible();
     });
 
     test('should show 2-column gallery', async ({ page }) => {
+      await page.setViewportSize({ width: 768, height: 1024 });
       await page.goto('/');
       const cards = await page.locator('#gallery .gallery-card').all();
       if (cards.length >= 2) {
@@ -104,11 +109,8 @@ test.describe('Responsive Layout', () => {
   });
 
   test.describe('Desktop (1280px)', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-    });
-
     test('should show 3-column gallery', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto('/');
       const cards = await page.locator('#gallery .gallery-card').all();
       if (cards.length >= 3) {
@@ -122,12 +124,14 @@ test.describe('Responsive Layout', () => {
     });
 
     test('should wrap filter buttons', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto('/');
       const filterNav = page.locator('#filter-buttons');
       await expect(filterNav).toHaveClass(/md:flex-wrap/);
     });
 
     test('should show 4-column stats grid', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto('/');
       // Stats bar is the section right after hero, with border-b-2 and grid-cols-2 lg:grid-cols-4
       const statsGrid = page.locator('section.border-b-2 > .container-custom.grid');
