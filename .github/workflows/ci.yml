@@ -93,6 +93,14 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
+      - name: Build site for tests
+        run: npm run build
+        env:
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
+          SANITY_API_VERSION: ${{ secrets.SANITY_API_VERSION }}
+          SANITY_TOKEN: ${{ secrets.SANITY_TOKEN }}
+
       - name: Run Playwright E2E tests
         run: npx playwright test --reporter=json,html > playwright-results.json || true
         env:
