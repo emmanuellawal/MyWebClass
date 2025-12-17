@@ -3,8 +3,8 @@
 # Team: New Jersey Institute of Technology
 
 [build]
-  # Build command - run CSS then Eleventy directly (avoids npm-run-all path issues)
-  command = "npm ci && npm run build:css && npm run build:eleventy"
+  # Build command - install all deps, then build with NODE_ENV=production for CSS optimization
+  command = "npm install && NODE_ENV=production npx tailwindcss -i src/styles/main.css -o public/styles/main.css --minify && npx eleventy"
 
   # Directory to publish (Eleventy output)
   publish = "public"
@@ -50,9 +50,9 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Environment variable context
+# Environment variable context - NODE_ENV set after install to allow devDeps
 [context.production.environment]
-  NODE_ENV = "production"
+  # NODE_ENV intentionally not set here - set in build script after npm install
 
 [context.deploy-preview.environment]
   NODE_ENV = "preview"
