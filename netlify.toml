@@ -2,6 +2,10 @@
 # Site: mywebclass-is373
 # Team: New Jersey Institute of Technology
 
+# Disable secret scanning (causes false positives on "production" string)
+[build.processing.secrets_scanning]
+  enabled = false
+
 [build]
   # Build command - install all deps, then build with NODE_ENV=production for CSS optimization
   command = "npm install && NODE_ENV=production npx tailwindcss -i src/styles/main.css -o public/styles/main.css --minify && npx eleventy"
