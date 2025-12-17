@@ -54,7 +54,7 @@ npm install
 # Start development server
 npm run dev
 
-# Build for production
+# Build for deployment
 npm run build
 ```
 
@@ -63,7 +63,7 @@ npm run build
 | Script | Description |
 |--------|-------------|
 | `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build for production |
+| `npm run build` | Build for deployment |
 | `npm start` | Start Eleventy server |
 | `npm test` | Run unit tests |
 | `npm run test:e2e` | Run Playwright E2E tests |
