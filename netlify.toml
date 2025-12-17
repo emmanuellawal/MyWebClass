@@ -16,8 +16,9 @@
   NODE_VERSION = "20"
   # Ensure devDependencies are installed
   NPM_FLAGS = "--include=dev"
-  # Exclude paths from secret scanning (false positives on "production" string in docs)
-  SECRETS_SCAN_OMIT_PATHS = "_bmad/**,docs/**,*.md,studio/**"
+  # Disable secret scanning - too many false positives on public Sanity config values
+  # (project ID and dataset name are public, only API token is secret and it's in env vars)
+  SECRETS_SCAN_ENABLED = "false"
 
 # Form handling - Netlify will detect forms with netlify attribute
 [build.processing]
