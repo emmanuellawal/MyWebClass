@@ -1,8 +1,10 @@
 # MyWebClass.org
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0e579509-4d32-481b-943b-02e5e902fbc4/deploy-status)](https://app.netlify.com/projects/mywebclass-is373/deploys)
 [![CI/CD Pipeline](https://github.com/gsinghjay/MyWebClass/actions/workflows/ci.yml/badge.svg)](https://github.com/gsinghjay/MyWebClass/actions/workflows/ci.yml)
-[![Sanity Content Rebuild](https://github.com/gsinghjay/MyWebClass/actions/workflows/sanity-rebuild.yml/badge.svg)](https://github.com/gsinghjay/MyWebClass/actions/workflows/sanity-rebuild.yml)
 [![Playwright E2E](https://img.shields.io/badge/E2E-Playwright-45ba4b?logo=playwright&logoColor=white)](https://github.com/gsinghjay/MyWebClass/actions/workflows/ci.yml)
+
+**Live Site:** https://mywebclass-is373.netlify.app/
 
 A design education platform built with Eleventy, Nunjucks, Tailwind CSS, and Sanity CMS. Teaches design history through authentic, fully-implemented website demos.
 
@@ -16,7 +18,7 @@ MyWebClass.org showcases iconic design movements (Swiss International Style, Bau
 - **Templating**: Nunjucks
 - **Styling**: Tailwind CSS v4
 - **CMS**: Sanity (headless CMS)
-- **Hosting**: GitHub Pages
+- **Hosting**: Netlify
 - **Design System**: Swiss International Style
 
 ## Project Structure
@@ -33,7 +35,11 @@ project/
 │   ├── styles/              # CSS (Tailwind)
 │   ├── scripts/             # Client-side JavaScript
 │   └── assets/              # Images, fonts
+├── netlify/
+│   └── functions/           # Netlify serverless functions
+├── studio/                  # Sanity Studio
 ├── public/                  # Build output
+├── netlify.toml             # Netlify configuration
 ├── .eleventy.js             # Eleventy config
 ├── tailwind.config.js       # Tailwind config
 └── postcss.config.js        # PostCSS config
@@ -155,19 +161,26 @@ Currently using mock data in `src/_data/`. To integrate with Sanity CMS:
 
 ## Deployment
 
-### Netlify
+This project is deployed on **Netlify** with automatic deploys on push to `main`.
 
-1. Connect Git repository
-2. Set build command: `npm run build`
-3. Set publish directory: `public`
-4. Add environment variables for Sanity
+**Site:** https://mywebclass-is373.netlify.app/
 
-### Vercel
+### Environment Variables (Netlify Dashboard)
 
-1. Import project from Git
-2. Set framework preset to "Other"
-3. Set build command: `npm run build`
-4. Set output directory: `public`
+| Variable | Description |
+|----------|-------------|
+| `SANITY_PROJECT_ID` | Sanity project ID |
+| `SANITY_DATASET` | Sanity dataset name |
+| `SANITY_API_TOKEN` | Sanity API token (write access) |
+| `DISCORD_WEBHOOK_URL` | (Optional) Discord notifications |
+| `AIRTABLE_API_KEY` | (Optional) Airtable CRM sync |
+
+### Build Configuration
+
+Build settings are in `netlify.toml`:
+- **Build command:** `npm install && NODE_ENV=production npx tailwindcss ... && npx eleventy`
+- **Publish directory:** `public`
+- **Functions:** `netlify/functions`
 
 ## License
 
